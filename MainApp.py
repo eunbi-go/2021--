@@ -11,5 +11,11 @@ def InitTopText():
     mainText.pack()
     mainText.place(x=30)
 
+    mainImg = tkinter.PhotoImage(file="movie0.png", master=mainWnd)
+    mainImgLabel = Label(mainWnd, image=mainImg)
+    mainImgLabel.pack()
+    mainImgLabel.place(x=10, y=50)
+
+
 InitTopText()
 mainWnd.mainloop()
