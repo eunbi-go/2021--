@@ -14,7 +14,11 @@ mainWnd.title("영화 정보 검색 앱")
 class MainGUI:
     def __init__(self):
         self.dayRankIdx = 0
-
+        # 막대 그래프
+        self.graphW = 800
+        self.graphH = 600
+        self.graphBar = (self.graphW-10)/10
+        self.graphStart = False
 
         Font = font.Font(mainWnd, size=20, weight='bold', family='Consolas')
         mainText = Label(mainWnd, font=Font, text='영화 정보 검색 앱')
@@ -61,7 +65,36 @@ class MainGUI:
         preBt.pack()
         preBt.place(x=350,y=10)
 
+        graphBt = Button(self.BoxOfficeWnd, font=tmpFont, text='그래프', command=self.BoxOfficeGraph)
+        graphBt.pack()
+        graphBt.place(x=400,y=10)
+
         self.BoxOfficeWnd.mainloop()
+
+    def BoxOfficeGraph(self):
+        self.Graph = Tk()
+        self.currGrp = 0
+
+        self.canvas = Canvas(self.Graph, width=self.graphW, height=self.graphH, bg='white')
+        self.canvas.pack()
+
+        listBox = Listbox(self.canvas, width=20, height=2)
+        listBox.insert(1, '상영횟수/스크린수')
+        listBox.insert(2, '누적관객수/누적수익')
+        listBox.pack()
+        listBox.place(x=400,y=10)
+
+        self.DrawGraph(self.currGrp)
+
+    def DrawGraph(self, currGrp):
+        if currGrp == 1:
+            for i in range(10):
+                # 해당 일자 상영된 횟수
+                self.canvas.create_rectangle(10+i*self.graphBar, self.graphH-(self.graphH-20)*(self.iShowCnt[i])/(max(self.iShowCnt)),
+                                    10+(i+1)*self.graphBar-50, self.graphH-20, fill='red', tags='showCnt')
+                # 해당 일자 상영한 스크린 수
+                self.canvas.create_rectangle(10+i*self.graphBar+50, self.graphH-(self.graphH-20)*(self.iScrnCnt[i])/(max(self.iScrnCnt)),
+                                    10+(i+1)*self.graphBar-50, self.graphH-20, fill='blue', tags='scrnCnt')
 
     def NextPage(self):
         self.dayRankIdx += 1
@@ -92,16 +125,20 @@ class MainGUI:
         openingDt = []
         salesAcc = []
         audiAcc = []
-        scrnCnt = []
-        showCnt = []
+        self.scrnCnt = []
+        self.iScrnCnt = []
+        self.showCnt = []
+        self.iShowCnt = []
         for b in d['boxOfficeResult']['dailyBoxOfficeList']:
             movieNm.append(b['movieNm'])
             openingDt.append(b['openDt'])
             salesAcc.append(b['salesAcc'])
             audiAcc.append(b['audiAcc'])
-            scrnCnt.append(b['scrnCnt'])
-            showCnt.append(b['showCnt'])
-
+            self.scrnCnt.append(b['scrnCnt'])
+            self.iScrnCnt.append(int(b['scrnCnt']))
+            self.showCnt.append(b['showCnt'])
+            self.iShowCnt.append((int)(b['showCnt']))
+        print(len(movieNm))
         NmFont = font.Font(mainWnd, size=30, weight='bold', family='Consolas')
 
         # 영화 이름
@@ -137,19 +174,19 @@ class MainGUI:
         thirdSales.place(x=500, y=300)
 
         # 해당 일자 상영한 스크린 수
-        firstSales = Label(self.BoxOfficeWnd, text=scrnCnt[self.dayRankIdx], font=NmFont)
+        firstSales = Label(self.BoxOfficeWnd, text=self.scrnCnt[self.dayRankIdx], font=NmFont)
         firstSales.place(x=600, y=100)
-        secondSales = Label(self.BoxOfficeWnd, text=scrnCnt[self.dayRankIdx+1], font=NmFont)
+        secondSales = Label(self.BoxOfficeWnd, text=self.scrnCnt[self.dayRankIdx+1], font=NmFont)
         secondSales.place(x=600, y=200)
-        thirdSales = Label(self.BoxOfficeWnd, text=scrnCnt[self.dayRankIdx+2], font=NmFont)
+        thirdSales = Label(self.BoxOfficeWnd, text=self.scrnCnt[self.dayRankIdx+2], font=NmFont)
         thirdSales.place(x=600, y=300)
 
         # 해당 일자 상영된 횟수
-        firstSales = Label(self.BoxOfficeWnd, text=showCnt[self.dayRankIdx], font=NmFont)
+        firstSales = Label(self.BoxOfficeWnd, text=self.showCnt[self.dayRankIdx], font=NmFont)
         firstSales.place(x=700, y=100)
-        secondSales = Label(self.BoxOfficeWnd, text=showCnt[self.dayRankIdx+1], font=NmFont)
+        secondSales = Label(self.BoxOfficeWnd, text=self.showCnt[self.dayRankIdx+1], font=NmFont)
         secondSales.place(x=700, y=200)
-        thirdSales = Label(self.BoxOfficeWnd, text=showCnt[self.dayRankIdx+2], font=NmFont)
+        thirdSales = Label(self.BoxOfficeWnd, text=self.showCnt[self.dayRankIdx+2], font=NmFont)
         thirdSales.place(x=700, y=300)
 
         self.rankImg = []
@@ -163,6 +200,8 @@ class MainGUI:
             self.imgLable[i].pack()
             self.imgLable[i].place(x=10, y=50+i*160)
 
+    def LoadInfo(self):
+        pass
 
 
 
