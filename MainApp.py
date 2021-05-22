@@ -73,11 +73,13 @@ class MainGUI:
         openingDt = []
         salesAcc = []
         audiAcc = []
+        scrnCnt = []
         for b in d['boxOfficeResult']['dailyBoxOfficeList']:
             movieNm.append(b['movieNm'])
             openingDt.append(b['openDt'])
             salesAcc.append(b['salesAcc'])
             audiAcc.append(b['audiAcc'])
+            scrnCnt.append(b['scrnCnt'])
 
         self.dayRankIdx = 0
         NmFont = font.Font(mainWnd, size=30, weight='bold', family='Consolas')
@@ -113,6 +115,14 @@ class MainGUI:
         secondSales.place(x=500, y=200)
         thirdSales = Label(self.BoxOfficeWnd, text=audiAcc[self.dayRankIdx], font=NmFont)
         thirdSales.place(x=500, y=300)
+
+        # 해당 일자 상영한 스크린 수
+        firstSales = Label(self.BoxOfficeWnd, text=scrnCnt[self.dayRankIdx], font=NmFont)
+        firstSales.place(x=600, y=100)
+        secondSales = Label(self.BoxOfficeWnd, text=scrnCnt[self.dayRankIdx], font=NmFont)
+        secondSales.place(x=600, y=200)
+        thirdSales = Label(self.BoxOfficeWnd, text=scrnCnt[self.dayRankIdx], font=NmFont)
+        thirdSales.place(x=600, y=300)
 
         self.rankImg = []
         self.rankImg.append(PhotoImage(file='first.GIF', master=self.BoxOfficeWnd))
