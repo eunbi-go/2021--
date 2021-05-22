@@ -70,15 +70,29 @@ class MainGUI:
         text = res.text
         d = json.loads(text)
         movieNm = []
+        openingDt = []
         for b in d['boxOfficeResult']['dailyBoxOfficeList']:
             movieNm.append(b['movieNm'])
+            openingDt.append(b['openDt'])
+
         self.dayRankIdx = 0
-        firstNameL = Label(self.BoxOfficeWnd, text = movieNm[self.dayRankIdx])
+        NmFont = font.Font(mainWnd, size=30, weight='bold', family='Consolas')
+
+        # 영화 이름
+        firstNameL = Label(self.BoxOfficeWnd, text = movieNm[self.dayRankIdx], font=NmFont)
         firstNameL.place(x=150, y=100)
-        secondNameL = Label(self.BoxOfficeWnd, text=movieNm[self.dayRankIdx+1])
+        secondNameL = Label(self.BoxOfficeWnd, text=movieNm[self.dayRankIdx+1], font=NmFont)
         secondNameL.place(x=150, y=200)
-        thirdNameL = Label(self.BoxOfficeWnd, text=movieNm[self.dayRankIdx+2])
+        thirdNameL = Label(self.BoxOfficeWnd, text=movieNm[self.dayRankIdx+2], font=NmFont)
         thirdNameL.place(x=150,y=300)
+
+        # 영화 개봉일
+        firstOpenDt = Label(self.BoxOfficeWnd, text=openingDt[self.dayRankIdx], font=NmFont)
+        firstOpenDt.place(x=150, y=150)
+        secondOpenDt = Label(self.BoxOfficeWnd, text=openingDt[self.dayRankIdx], font=NmFont)
+        secondOpenDt.place(x=150, y=250)
+        thirdOpenDt = Label(self.BoxOfficeWnd, text=openingDt[self.dayRankIdx], font=NmFont)
+        thirdOpenDt.place(x=150, y=350)
 
         self.rankImg = []
         self.rankImg.append(PhotoImage(file='first.GIF', master=self.BoxOfficeWnd))
