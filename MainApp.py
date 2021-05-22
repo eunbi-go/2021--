@@ -9,8 +9,6 @@ mainWnd = Tk()
 mainWnd.geometry("600x600")
 mainWnd.title("영화 정보 검색 앱")
 
-global dayOfficeURL
-dayOfficeURL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=edfd0508a0320efa8abbe1eeba097a94&targetDt="
 
 
 class MainGUI:
@@ -65,12 +63,22 @@ class MainGUI:
         else:
             strDate += dayEt.get()
 
+        dayOfficeURL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=edfd0508a0320efa8abbe1eeba097a94&targetDt="
+
         dayOfficeURL += strDate
         res = requests.get(dayOfficeURL)
         text = res.text
         d = json.loads(text)
+        movieNm = []
         for b in d['boxOfficeResult']['dailyBoxOfficeList']:
-            print(b['rank'], b['rankOldAndNew'], b['movieCd'], b['movieNm'])
+            movieNm.append(b['movieNm'])
+        self.dayRankIdx = 0
+        firstNameL = Label(self.BoxOfficeWnd, text = movieNm[self.dayRankIdx])
+        firstNameL.place(x=100, y=100)
+        secondNameL = Label(self.BoxOfficeWnd, text=movieNm[self.dayRankIdx+1])
+        secondNameL.place(x=100, y=200)
+        thirdNameL = Label(self.BoxOfficeWnd, text=movieNm[self.dayRankIdx+2])
+        thirdNameL.place(x=100,y=300)
 
 
 
