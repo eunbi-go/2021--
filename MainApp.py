@@ -78,23 +78,27 @@ class MainGUI:
         self.canvas = Canvas(self.Graph, width=self.graphW, height=self.graphH, bg='white')
         self.canvas.pack()
 
-        listBox = Listbox(self.canvas, width=20, height=2)
-        listBox.insert(1, '상영횟수/스크린수')
-        listBox.insert(2, '누적관객수/누적수익')
-        listBox.pack()
-        listBox.place(x=400,y=10)
+        self.chkVar = IntVar()
+        self.chkBox = Radiobutton(self.Graph, text='상영횟수/스크린수', variable=self.chkVar,
+                             value=1, command=self.DrawGraph)
+        self.chkBox.pack(anchor=W)
+        self.chkBox2 = Radiobutton(self.Graph, text='상영횟수/2', variable=self.chkVar,
+                              value=2, command=self.DrawGraph)
+        self.chkBox2.pack(anchor=W)
 
-        self.DrawGraph(self.currGrp)
-
-    def DrawGraph(self, currGrp):
-        if currGrp == 1:
+    def DrawGraph(self):
+        if self.chkVar.get() == 1:
             for i in range(10):
                 # 해당 일자 상영된 횟수
                 self.canvas.create_rectangle(10+i*self.graphBar, self.graphH-(self.graphH-20)*(self.iShowCnt[i])/(max(self.iShowCnt)),
-                                    10+(i+1)*self.graphBar-50, self.graphH-20, fill='red', tags='showCnt')
+                                             10+(i+1)*self.graphBar-50, self.graphH-20, fill='red', tags='showCnt')
                 # 해당 일자 상영한 스크린 수
                 self.canvas.create_rectangle(10+i*self.graphBar+50, self.graphH-(self.graphH-20)*(self.iScrnCnt[i])/(max(self.iScrnCnt)),
-                                    10+(i+1)*self.graphBar-50, self.graphH-20, fill='blue', tags='scrnCnt')
+                                             10+(i+1)*self.graphBar-50, self.graphH-20, fill='blue', tags='scrnCnt')
+        if self.chkBox.select():
+            print(1)
+        elif self.chkBox2.select():
+            print(2)
 
     def NextPage(self):
         self.dayRankIdx += 1
@@ -138,7 +142,6 @@ class MainGUI:
             self.iScrnCnt.append(int(b['scrnCnt']))
             self.showCnt.append(b['showCnt'])
             self.iShowCnt.append((int)(b['showCnt']))
-        print(len(movieNm))
         NmFont = font.Font(mainWnd, size=30, weight='bold', family='Consolas')
 
         # 영화 이름
