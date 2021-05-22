@@ -71,9 +71,13 @@ class MainGUI:
         d = json.loads(text)
         movieNm = []
         openingDt = []
+        salesAcc = []
+        audiAcc = []
         for b in d['boxOfficeResult']['dailyBoxOfficeList']:
             movieNm.append(b['movieNm'])
             openingDt.append(b['openDt'])
+            salesAcc.append(b['salesAcc'])
+            audiAcc.append(b['audiAcc'])
 
         self.dayRankIdx = 0
         NmFont = font.Font(mainWnd, size=30, weight='bold', family='Consolas')
@@ -93,6 +97,22 @@ class MainGUI:
         secondOpenDt.place(x=150, y=250)
         thirdOpenDt = Label(self.BoxOfficeWnd, text=openingDt[self.dayRankIdx], font=NmFont)
         thirdOpenDt.place(x=150, y=350)
+
+        # 누적 매출액
+        firstSales = Label(self.BoxOfficeWnd, text=salesAcc[self.dayRankIdx], font=NmFont)
+        firstSales.place(x=380, y=100)
+        secondSales = Label(self.BoxOfficeWnd, text=salesAcc[self.dayRankIdx], font=NmFont)
+        secondSales.place(x=380, y=200)
+        thirdSales = Label(self.BoxOfficeWnd, text=salesAcc[self.dayRankIdx], font=NmFont)
+        thirdSales.place(x=380, y=300)
+
+        # 누적 관객수
+        firstSales = Label(self.BoxOfficeWnd, text=audiAcc[self.dayRankIdx], font=NmFont)
+        firstSales.place(x=500, y=100)
+        secondSales = Label(self.BoxOfficeWnd, text=audiAcc[self.dayRankIdx], font=NmFont)
+        secondSales.place(x=500, y=200)
+        thirdSales = Label(self.BoxOfficeWnd, text=audiAcc[self.dayRankIdx], font=NmFont)
+        thirdSales.place(x=500, y=300)
 
         self.rankImg = []
         self.rankImg.append(PhotoImage(file='first.GIF', master=self.BoxOfficeWnd))
