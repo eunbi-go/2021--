@@ -74,11 +74,22 @@ class MainGUI:
             movieNm.append(b['movieNm'])
         self.dayRankIdx = 0
         firstNameL = Label(self.BoxOfficeWnd, text = movieNm[self.dayRankIdx])
-        firstNameL.place(x=100, y=100)
+        firstNameL.place(x=150, y=100)
         secondNameL = Label(self.BoxOfficeWnd, text=movieNm[self.dayRankIdx+1])
-        secondNameL.place(x=100, y=200)
+        secondNameL.place(x=150, y=200)
         thirdNameL = Label(self.BoxOfficeWnd, text=movieNm[self.dayRankIdx+2])
-        thirdNameL.place(x=100,y=300)
+        thirdNameL.place(x=150,y=300)
+
+        self.rankImg = []
+        self.rankImg.append(PhotoImage(file='first.GIF', master=self.BoxOfficeWnd))
+        self.rankImg.append(PhotoImage(file='second.GIF', master=self.BoxOfficeWnd))
+        self.rankImg.append(PhotoImage(file='third.GIF', master=self.BoxOfficeWnd))
+
+        self.imgLable = []
+        for i in range(3):
+            self.imgLable.append(Label(self.BoxOfficeWnd, image=self.rankImg[i]))
+            self.imgLable[i].pack()
+            self.imgLable[i].place(x=10, y=50+i*160)
 
 
 
