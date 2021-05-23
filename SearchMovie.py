@@ -26,6 +26,11 @@ class SearchMovie:
         searchBt.pack()
         searchBt.place(x=100,y=30)
 
+        # 영화 정보 표기
+        self.movieListbox = Listbox(self.mainWnd, width=25,height=18, relief='solid')
+        self.movieListbox.pack()
+        self.movieListbox.place(x=0,y=90)
+
         self.mainWnd.mainloop()
 
     def search(self):
@@ -38,7 +43,7 @@ class SearchMovie:
         res=requests.get(url,headers=header_parms)
 
         self.Alldata = res.json()
-        movieCnt = len(self.Alldata['items'])
+        self.movieCnt = len(self.Alldata['items'])
         self.title = []
         self.link = []
         self.date = []
@@ -46,8 +51,8 @@ class SearchMovie:
         self.actors = []
         self.rating = []
 
-        for i in range(movieCnt):
-            self.title.append(self.Alldata['items'][i]['title'].strip('</b>'))
+        for i in range(self.movieCnt):
+            self.title.append(self.Alldata['items'][i]['title'].strip('</b>').replace('<b>','').replace('</b>',''))
             self.link.append(self.Alldata['items'][i]['link'])
             self.date.append(self.Alldata['items'][i]['pubDate'])
             self.director.append(self.Alldata['items'][i]['director'].split('|')[0])
@@ -57,4 +62,5 @@ class SearchMovie:
         self.showInfo()
 
     def showInfo(self):
-        pass
+        for i in range(self.movieCnt):
+            self.movieListbox.insert(i, self.title[i])
