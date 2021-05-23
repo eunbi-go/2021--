@@ -159,12 +159,15 @@ class MainGUI:
         NmFont = font.Font(mainWnd, size=30, weight='bold', family='Consolas')
 
         # 순위
-        firstNameL = Label(self.BoxOfficeWnd, text=self.rank[self.dayRankIdx], font=NmFont)
-        firstNameL.place(x=50, y=100)
-        secondNameL = Label(self.BoxOfficeWnd, text=self.rank[self.dayRankIdx+1], font=NmFont)
-        secondNameL.place(x=50, y=200)
-        thirdNameL = Label(self.BoxOfficeWnd, text=self.rank[self.dayRankIdx+2], font=NmFont)
-        thirdNameL.place(x=50,y=300)
+        firstNameL = Label(self.BoxOfficeWnd, font=("Courier",20), text='순위')
+        firstNameL.place(x=25, y=60)
+        rankFont = font.Font(family="Courier", size=16, weight="bold", slant="italic")
+        firstNameL = Label(self.BoxOfficeWnd, font=("Courier",40), text=self.rank[self.dayRankIdx])
+        firstNameL.place(x=30, y=100)
+        secondNameL = Label(self.BoxOfficeWnd, font=("Courier",40), text=self.rank[self.dayRankIdx+1])
+        secondNameL.place(x=30, y=200)
+        thirdNameL = Label(self.BoxOfficeWnd, font=("Courier",40), text=self.rank[self.dayRankIdx+2])
+        thirdNameL.place(x=30,y=300)
 
         # 영화 이름
         firstNameL = Label(self.BoxOfficeWnd, text=movieNm[self.dayRankIdx], font=NmFont)
