@@ -83,22 +83,28 @@ class MainGUI:
                              value=1, command=self.DrawGraph)
         self.chkBox.pack(anchor=W)
         self.chkBox2 = Radiobutton(self.Graph, text='상영횟수/2', variable=self.chkVar,
-                              value=2, command=self.DrawGraph)
+                              value=2, command=self.DrawGraph2)
         self.chkBox2.pack(anchor=W)
 
     def DrawGraph(self):
-        if self.chkVar.get() == 1:
-            for i in range(10):
-                # 해당 일자 상영된 횟수
-                self.canvas.create_rectangle(10+i*self.graphBar, self.graphH-(self.graphH-20)*(self.iShowCnt[i])/(max(self.iShowCnt)),
-                                             10+(i+1)*self.graphBar-50, self.graphH-20, fill='red', tags='showCnt')
-                # 해당 일자 상영한 스크린 수
-                self.canvas.create_rectangle(10+i*self.graphBar+50, self.graphH-(self.graphH-20)*(self.iScrnCnt[i])/(max(self.iScrnCnt)),
+        self.canvas.delete('scrnCnt2')
+        for i in range(10):
+            # 해당 일자 상영된 횟수
+            self.canvas.create_rectangle(10+i*self.graphBar, self.graphH-(self.graphH-20)*(self.iShowCnt[i])/(max(self.iShowCnt)),
+                                            10+(i+1)*self.graphBar-50, self.graphH-20, fill='red', tags='scrnCnt')
+            # 해당 일자 상영한 스크린 수
+            self.canvas.create_rectangle(10+i*self.graphBar+50, self.graphH-(self.graphH-20)*(self.iScrnCnt[i])/(max(self.iScrnCnt)),
                                              10+(i+1)*self.graphBar-50, self.graphH-20, fill='blue', tags='scrnCnt')
-        if self.chkBox.select():
-            print(1)
-        elif self.chkBox2.select():
-            print(2)
+
+    def DrawGraph2(self):
+        self.canvas.delete('scrnCnt')
+        for i in range(10):
+            # 해당 일자 상영된 횟수
+            self.canvas.create_rectangle(10+i*self.graphBar, self.graphH-(self.graphH-20)*(self.iAudiAc[i])/(max(self.iAudiAc)),
+                                         10+(i+1)*self.graphBar-50, self.graphH-20, fill='red', tags='scrnCnt2')
+            # 해당 일자 상영한 스크린 수
+            self.canvas.create_rectangle(10+i*self.graphBar+50, self.graphH-(self.graphH-20)*(self.iSalesAcc[i])/(max(self.iSalesAcc)),
+                                         10+(i+1)*self.graphBar-50, self.graphH-20, fill='blue', tags='scrnCnt2')
 
     def NextPage(self):
         self.dayRankIdx += 1
@@ -127,8 +133,10 @@ class MainGUI:
         d = json.loads(text)
         movieNm = []
         openingDt = []
-        salesAcc = []
-        audiAcc = []
+        self.salesAcc = []
+        self.iSalesAcc = []
+        self.audiAcc = []
+        self.iAudiAc = []
         self.scrnCnt = []
         self.iScrnCnt = []
         self.showCnt = []
@@ -136,8 +144,10 @@ class MainGUI:
         for b in d['boxOfficeResult']['dailyBoxOfficeList']:
             movieNm.append(b['movieNm'])
             openingDt.append(b['openDt'])
-            salesAcc.append(b['salesAcc'])
-            audiAcc.append(b['audiAcc'])
+            self.salesAcc.append(b['salesAcc'])
+            self.iSalesAcc.append(int(b['salesAcc']))
+            self.audiAcc.append(b['audiAcc'])
+            self.iAudiAc.append(int(b['audiAcc']))
             self.scrnCnt.append(b['scrnCnt'])
             self.iScrnCnt.append(int(b['scrnCnt']))
             self.showCnt.append(b['showCnt'])
@@ -161,19 +171,19 @@ class MainGUI:
         thirdOpenDt.place(x=150, y=350)
 
         # 누적 매출액
-        firstSales = Label(self.BoxOfficeWnd, text=salesAcc[self.dayRankIdx], font=NmFont)
+        firstSales = Label(self.BoxOfficeWnd, text=self.salesAcc[self.dayRankIdx], font=NmFont)
         firstSales.place(x=380, y=100)
-        secondSales = Label(self.BoxOfficeWnd, text=salesAcc[self.dayRankIdx+1], font=NmFont)
+        secondSales = Label(self.BoxOfficeWnd, text=self.salesAcc[self.dayRankIdx+1], font=NmFont)
         secondSales.place(x=380, y=200)
-        thirdSales = Label(self.BoxOfficeWnd, text=salesAcc[self.dayRankIdx+2], font=NmFont)
+        thirdSales = Label(self.BoxOfficeWnd, text=self.salesAcc[self.dayRankIdx+2], font=NmFont)
         thirdSales.place(x=380, y=300)
 
         # 누적 관객수
-        firstSales = Label(self.BoxOfficeWnd, text=audiAcc[self.dayRankIdx], font=NmFont)
+        firstSales = Label(self.BoxOfficeWnd, text=self.audiAcc[self.dayRankIdx], font=NmFont)
         firstSales.place(x=500, y=100)
-        secondSales = Label(self.BoxOfficeWnd, text=audiAcc[self.dayRankIdx+1], font=NmFont)
+        secondSales = Label(self.BoxOfficeWnd, text=self.audiAcc[self.dayRankIdx+1], font=NmFont)
         secondSales.place(x=500, y=200)
-        thirdSales = Label(self.BoxOfficeWnd, text=audiAcc[self.dayRankIdx+2], font=NmFont)
+        thirdSales = Label(self.BoxOfficeWnd, text=self.audiAcc[self.dayRankIdx+2], font=NmFont)
         thirdSales.place(x=500, y=300)
 
         # 해당 일자 상영한 스크린 수
