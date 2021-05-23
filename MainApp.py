@@ -4,6 +4,7 @@ import tkinter.ttk
 import tkinter.messagebox
 import requests
 import json
+from SearchMovie import *
 
 mainWnd = Tk()
 mainWnd.geometry("600x600")
@@ -32,6 +33,10 @@ class MainGUI:
         tmpFont = font.Font(mainWnd, size=15, weight='bold', family='Consolas')
         self.boxOffice = Button(mainWnd, text='박스 오피스 순위', font=tmpFont, command=self.BoxOffice, width=15, height=5)
         self.boxOffice.place(x=0, y=40)
+
+        self.boxOffice = Button(mainWnd, text='영화 검색', font=tmpFont,
+                                command=SearchMovie, width=15, height=5)
+        self.boxOffice.place(x=0, y=200)
 
     def BoxOffice(self):
         self.BoxOfficeWnd = Tk()
