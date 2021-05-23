@@ -37,17 +37,24 @@ class SearchMovie:
         url = f"https://openapi.naver.com/v1/search/movie.json?query={self.strSearch}"
         res=requests.get(url,headers=header_parms)
 
-        self.Alldata =res.json()
-        self.title = self.Alldata['items'][0]['title'].strip('</b>')
-        self.link = self.Alldata['items'][0]['link']
-        self.date = self.Alldata['items'][0]['pubDate']
-        self.director = self.Alldata['items'][0]['director'].split('|')[0]
-        self.actors = self.Alldata['items'][0]['actor'].split('|')[:-1]
-        self.rating = float(self.Alldata['items'][0]['userRating'])
+        self.Alldata = res.json()
+        movieCnt = len(self.Alldata['items'])
+        self.title = []
+        self.link = []
+        self.date = []
+        self.director = []
+        self.actors = []
+        self.rating = []
 
-        print(self.title)
-        print(self.link)
-        print(self.date)
-        print(self.director)
-        print(self.actors)
-        print(self.rating)
+        for i in range(movieCnt):
+            self.title.append(self.Alldata['items'][i]['title'].strip('</b>'))
+            self.link.append(self.Alldata['items'][i]['link'])
+            self.date.append(self.Alldata['items'][i]['pubDate'])
+            self.director.append(self.Alldata['items'][i]['director'].split('|')[0])
+            self.actors.append(self.Alldata['items'][i]['actor'].split('|')[:-1])
+            self.rating.append(float(self.Alldata['items'][i]['userRating']))
+
+        self.showInfo()
+
+    def showInfo(self):
+        pass
