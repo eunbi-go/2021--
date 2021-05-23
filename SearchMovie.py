@@ -33,16 +33,21 @@ class SearchMovie:
 
         client_id = "tvo5aUWG9rwBq1YRMqyJ"
         client_secret = "40VkT1fuAS"
-        encText = urllib.parse.quote(self.strSearch)
-        url = "https://openapi.naver.com/v1/search/movie?query=" + encText # json 결과
-        # url = "https://openapi.naver.com/v1/search/blog.xml?query=" + encText # xml 결과
-        request = urllib.request.Request(url)
-        request.add_header("X-Naver-Client-Id",client_id)
-        request.add_header("X-Naver-Client-Secret",client_secret)
-        response = urllib.request.urlopen(request)
-        rescode = response.getcode()
-        if(rescode==200):
-            response_body = response.read()
-            print(response_body.decode('utf-8'))
-        else:
-            print("Error Code:" + rescode)
+        header_parms ={"X-Naver-Client-Id":client_id,"X-Naver-Client-Secret":client_secret}
+        url = f"https://openapi.naver.com/v1/search/movie.json?query={self.strSearch}"
+        res=requests.get(url,headers=header_parms)
+
+        self.Alldata =res.json()
+        self.title = self.Alldata['items'][0]['title'].strip('</b>')
+        self.link = self.Alldata['items'][0]['link']
+        self.date = self.Alldata['items'][0]['pubDate']
+        self.director = self.Alldata['items'][0]['director'].split('|')[0]
+        self.actors = self.Alldata['items'][0]['actor'].split('|')[:-1]
+        self.rating = float(self.Alldata['items'][0]['userRating'])
+
+        print(self.title)
+        print(self.link)
+        print(self.date)
+        print(self.director)
+        print(self.actors)
+        print(self.rating)
