@@ -133,6 +133,8 @@ class MainGUI:
         d = json.loads(text)
         movieNm = []
         openingDt = []
+        self.rank = []
+        self.iRank = []
         self.salesAcc = []
         self.iSalesAcc = []
         self.audiAcc = []
@@ -144,6 +146,8 @@ class MainGUI:
         for b in d['boxOfficeResult']['dailyBoxOfficeList']:
             movieNm.append(b['movieNm'])
             openingDt.append(b['openDt'])
+            self.rank.append(b['rank'])
+            self.iRank.append(int(b['rank']))
             self.salesAcc.append(b['salesAcc'])
             self.iSalesAcc.append(int(b['salesAcc']))
             self.audiAcc.append(b['audiAcc'])
@@ -153,6 +157,14 @@ class MainGUI:
             self.showCnt.append(b['showCnt'])
             self.iShowCnt.append((int)(b['showCnt']))
         NmFont = font.Font(mainWnd, size=30, weight='bold', family='Consolas')
+
+        # 순위
+        firstNameL = Label(self.BoxOfficeWnd, text=self.rank[self.dayRankIdx], font=NmFont)
+        firstNameL.place(x=50, y=100)
+        secondNameL = Label(self.BoxOfficeWnd, text=self.rank[self.dayRankIdx+1], font=NmFont)
+        secondNameL.place(x=50, y=200)
+        thirdNameL = Label(self.BoxOfficeWnd, text=self.rank[self.dayRankIdx+2], font=NmFont)
+        thirdNameL.place(x=50,y=300)
 
         # 영화 이름
         firstNameL = Label(self.BoxOfficeWnd, text=movieNm[self.dayRankIdx], font=NmFont)
@@ -201,17 +213,6 @@ class MainGUI:
         secondSales.place(x=700, y=200)
         thirdSales = Label(self.BoxOfficeWnd, text=self.showCnt[self.dayRankIdx+2], font=NmFont)
         thirdSales.place(x=700, y=300)
-
-        self.rankImg = []
-        self.rankImg.append(PhotoImage(file='first.GIF', master=self.BoxOfficeWnd))
-        self.rankImg.append(PhotoImage(file='second.GIF', master=self.BoxOfficeWnd))
-        self.rankImg.append(PhotoImage(file='third.GIF', master=self.BoxOfficeWnd))
-
-        self.imgLable = []
-        for i in range(3):
-            self.imgLable.append(Label(self.BoxOfficeWnd, image=self.rankImg[i]))
-            self.imgLable[i].pack()
-            self.imgLable[i].place(x=10, y=50+i*160)
 
     def LoadInfo(self):
         pass
