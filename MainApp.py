@@ -178,14 +178,18 @@ class MainGUI:
         thirdNameL.place(x=150,y=300)
 
         # 영화 개봉일
+        firstOpenDt = Label(self.BoxOfficeWnd, text='영화 제목 / 개봉일', font=("Courier",15))
+        firstOpenDt.place(x=140, y=60)
         firstOpenDt = Label(self.BoxOfficeWnd, text=openingDt[self.dayRankIdx], font=NmFont)
-        firstOpenDt.place(x=150, y=150)
+        firstOpenDt.place(x=150, y=130)
         secondOpenDt = Label(self.BoxOfficeWnd, text=openingDt[self.dayRankIdx+1], font=NmFont)
-        secondOpenDt.place(x=150, y=250)
+        secondOpenDt.place(x=150, y=230)
         thirdOpenDt = Label(self.BoxOfficeWnd, text=openingDt[self.dayRankIdx+2], font=NmFont)
-        thirdOpenDt.place(x=150, y=350)
+        thirdOpenDt.place(x=150, y=330)
 
         # 누적 매출액
+        firstOpenDt = Label(self.BoxOfficeWnd, text='누적 매출액', font=("Courier",12))
+        firstOpenDt.place(x=380, y=60)
         firstSales = Label(self.BoxOfficeWnd, text=self.salesAcc[self.dayRankIdx], font=NmFont)
         firstSales.place(x=380, y=100)
         secondSales = Label(self.BoxOfficeWnd, text=self.salesAcc[self.dayRankIdx+1], font=NmFont)
@@ -194,28 +198,38 @@ class MainGUI:
         thirdSales.place(x=380, y=300)
 
         # 누적 관객수
+        firstOpenDt = Label(self.BoxOfficeWnd, text='누적 관객수', font=("Courier",12))
+        firstOpenDt.place(x=540, y=60)
         firstSales = Label(self.BoxOfficeWnd, text=self.audiAcc[self.dayRankIdx], font=NmFont)
-        firstSales.place(x=500, y=100)
+        firstSales.place(x=540, y=100)
         secondSales = Label(self.BoxOfficeWnd, text=self.audiAcc[self.dayRankIdx+1], font=NmFont)
-        secondSales.place(x=500, y=200)
+        secondSales.place(x=540, y=200)
         thirdSales = Label(self.BoxOfficeWnd, text=self.audiAcc[self.dayRankIdx+2], font=NmFont)
-        thirdSales.place(x=500, y=300)
+        thirdSales.place(x=540, y=300)
 
         # 해당 일자 상영한 스크린 수
+        firstOpenDt = Label(self.BoxOfficeWnd, text='당일 스크린', font=("Courier",12))
+        firstOpenDt.place(x=655, y=40)
+        firstOpenDt = Label(self.BoxOfficeWnd, text='상영 수', font=("Courier",12))
+        firstOpenDt.place(x=675, y=60)
         firstSales = Label(self.BoxOfficeWnd, text=self.scrnCnt[self.dayRankIdx], font=NmFont)
-        firstSales.place(x=600, y=100)
+        firstSales.place(x=670, y=100)
         secondSales = Label(self.BoxOfficeWnd, text=self.scrnCnt[self.dayRankIdx+1], font=NmFont)
-        secondSales.place(x=600, y=200)
+        secondSales.place(x=670, y=200)
         thirdSales = Label(self.BoxOfficeWnd, text=self.scrnCnt[self.dayRankIdx+2], font=NmFont)
-        thirdSales.place(x=600, y=300)
+        thirdSales.place(x=670, y=300)
 
         # 해당 일자 상영된 횟수
+        firstOpenDt = Label(self.BoxOfficeWnd, text='당일 상영', font=("Courier",12))
+        firstOpenDt.place(x=760, y=40)
+        firstOpenDt = Label(self.BoxOfficeWnd, text='횟수', font=("Courier",12))
+        firstOpenDt.place(x=780, y=60)
         firstSales = Label(self.BoxOfficeWnd, text=self.showCnt[self.dayRankIdx], font=NmFont)
-        firstSales.place(x=700, y=100)
+        firstSales.place(x=770, y=100)
         secondSales = Label(self.BoxOfficeWnd, text=self.showCnt[self.dayRankIdx+1], font=NmFont)
-        secondSales.place(x=700, y=200)
+        secondSales.place(x=770, y=200)
         thirdSales = Label(self.BoxOfficeWnd, text=self.showCnt[self.dayRankIdx+2], font=NmFont)
-        thirdSales.place(x=700, y=300)
+        thirdSales.place(x=770, y=300)
 
     def LoadInfo(self):
         pass
