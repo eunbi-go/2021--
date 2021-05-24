@@ -35,6 +35,9 @@ class SearchMovie:
         dateL = Label(self.mainWnd, text='개봉일', font=("Courier",15))
         dateL.place(x=200,y=100)
 
+        directorL = Label(self.mainWnd, text='감독', font=("Courier",15))
+        directorL.place(x=200,y=150)
+
         self.mainWnd.mainloop()
 
     def search(self):
