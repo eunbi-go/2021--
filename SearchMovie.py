@@ -31,6 +31,10 @@ class SearchMovie:
         self.movieListbox.pack()
         self.movieListbox.place(x=0,y=90)
 
+        # 개봉일
+        dateL = Label(self.mainWnd, text='개봉일', font=("Courier",15))
+        dateL.place(x=200,y=100)
+
         self.mainWnd.mainloop()
 
     def search(self):
