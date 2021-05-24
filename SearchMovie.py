@@ -43,6 +43,10 @@ class SearchMovie:
         actorsL = Label(self.mainWnd, text='감독', font=("Courier",15))
         actorsL.place(x=200,y=200)
 
+        # 평점
+        ratingL = Label(self.mainWnd, text='감독', font=("Courier",15))
+        ratingL.place(x=200,y=250)
+
         self.mainWnd.mainloop()
 
     def search(self):
