@@ -51,9 +51,17 @@ class SearchMovie:
         actorsL = Label(self.mainWnd, text='감독', font=("Courier",15))
         actorsL.place(x=200,y=200)
 
+        self.actorsEt = Entry(self.mainWnd, bd=5)
+        self.actorsEt.pack()
+        self.actorsEt.place(x=250,y=200, width=100,height=40)
+
         # 평점
         ratingL = Label(self.mainWnd, text='감독', font=("Courier",15))
         ratingL.place(x=200,y=250)
+
+        self.ratingEt = Entry(self.mainWnd, bd=5)
+        self.ratingEt.pack()
+        self.ratingEt.place(x=250,y=250, width=100,height=40)
 
         self.mainWnd.mainloop()
 
