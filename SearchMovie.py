@@ -35,6 +35,10 @@ class SearchMovie:
         dateL = Label(self.mainWnd, text='개봉일', font=("Courier",15))
         dateL.place(x=200,y=100)
 
+        self.dateEt = Entry(self.mainWnd, bd=5)
+        self.dateEt.pack()
+        self.dateEt.place(x=250,y=100, width=100,height=40)
+
         # 감독
         directorL = Label(self.mainWnd, text='감독', font=("Courier",15))
         directorL.place(x=200,y=150)
