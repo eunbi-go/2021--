@@ -14,7 +14,7 @@ from PIL import Image,ImageTk
 class SearchMovie:
     def __init__(self):
         self.mainWnd = Tk()
-        self.mainWnd.geometry("600x400")
+        self.mainWnd.geometry("600x450")
         self.mainWnd.title("영화 검색")
         self.movieCnt = 0
 
@@ -64,18 +64,26 @@ class SearchMovie:
         self.labelDate = Label(self.mainWnd, font=("Courier",15), text=' ')
         self.labelDate.pack()
         self.labelDate.place(x=300,y=200)
+        # 평점
+        self.labelRate = Label(self.mainWnd, font=("Courier",15), text=' ')
+        self.labelRate.pack()
+        self.labelRate.place(x=300,y=230)
         # 감독
         self.labelDirector = Label(self.mainWnd, font=("Courier",15), text=' ')
         self.labelDirector.pack()
         self.labelDirector.place(x=300,y=260)
         # 출연배우
-        self.labelActors = Label(self.mainWnd, font=("Courier",15), text=' ')
+        self.labelActors = Label(self.mainWnd, font=("Courier",10), text=' ')
         self.labelActors.pack()
         self.labelActors.place(x=300,y=290)
-        # 평점
-        self.labelRate = Label(self.mainWnd, font=("Courier",15), text=' ')
-        self.labelRate.pack()
-        self.labelRate.place(x=300,y=230)
+
+        self.labelActors2 = Label(self.mainWnd, font=("Courier",10), text=' ')
+        self.labelActors2.pack()
+        self.labelActors2.place(x=300,y=320)
+
+        self.labelActors3 = Label(self.mainWnd, font=("Courier",10), text=' ')
+        self.labelActors3.pack()
+        self.labelActors3.place(x=300,y=350)
 
 
 
@@ -120,7 +128,18 @@ class SearchMovie:
         self.indexInfo = self.movieListbox.curselection()[0]
         self.labelDate.config(text=self.date[self.indexInfo])
         self.labelDirector.config(text=self.director[self.indexInfo])
-        self.labelActors.config(text=self.actors[self.indexInfo])
+        strLen = len(self.actors[self.indexInfo])
+        if strLen > 17:
+            begStr = self.actors[self.indexInfo][0:17]
+            midStr = self.actors[self.indexInfo][17:35]
+            self.labelActors.config(text=begStr)
+            self.labelActors2.config(text=midStr)
+        else:
+            self.labelActors.config(text=self.actors[self.indexInfo])
+            self.labelActors2.config(text=' ')
+        print(strLen)
+        print(self.actors[self.indexInfo])
+
         self.labelRate.config(text=self.rating[self.indexInfo])
         if len(self.image) == 0:
             return
