@@ -48,35 +48,34 @@ class SearchMovie:
         self.movieListbox.place(x=0,y=90)
 
         # 개봉일
-        dateL = Label(self.mainWnd, text='개봉일', font=("Courier",15))
-        dateL.place(x=200,y=100)
-        # 감독
-        directorL = Label(self.mainWnd, text='감독', font=("Courier",15))
-        directorL.place(x=200,y=150)
-        # 출연 배우
-        actorsL = Label(self.mainWnd, text='출연배우', font=("Courier",15))
-        actorsL.place(x=200,y=200)
+        dateL = Label(self.mainWnd, text='개봉년도', font=("Courier",15))
+        dateL.place(x=200,y=200)
         # 평점
         ratingL = Label(self.mainWnd, text='평점', font=("Courier",15))
-        ratingL.place(x=200,y=250)
-        # 이미지
+        ratingL.place(x=200,y=230)
+        # 감독
+        directorL = Label(self.mainWnd, text='감독', font=("Courier",15))
+        directorL.place(x=200,y=260)
+        # 출연배우
+        actorsL = Label(self.mainWnd, text='출연배우', font=("Courier",15))
+        actorsL.place(x=200,y=290)
 
         # 개봉일
         self.labelDate = Label(self.mainWnd, font=("Courier",15), text=' ')
         self.labelDate.pack()
-        self.labelDate.place(x=300,y=100)
+        self.labelDate.place(x=300,y=200)
         # 감독
         self.labelDirector = Label(self.mainWnd, font=("Courier",15), text=' ')
         self.labelDirector.pack()
-        self.labelDirector.place(x=300,y=150)
+        self.labelDirector.place(x=300,y=260)
         # 출연배우
         self.labelActors = Label(self.mainWnd, font=("Courier",15), text=' ')
         self.labelActors.pack()
-        self.labelActors.place(x=300,y=200)
+        self.labelActors.place(x=300,y=290)
         # 평점
         self.labelRate = Label(self.mainWnd, font=("Courier",15), text=' ')
         self.labelRate.pack()
-        self.labelRate.place(x=300,y=250)
+        self.labelRate.place(x=300,y=230)
 
 
 
@@ -136,5 +135,5 @@ class SearchMovie:
 
         imgL = Label(self.mainWnd,height=100,width=100)
         imgL.pack()
-        imgL.place(x=0,y=0)
+        imgL.place(x=200,y=100)
         imgL.config(image=image2)
