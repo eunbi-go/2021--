@@ -88,6 +88,7 @@ class SearchMovie:
         self.strSearch = self.movieNmEt.get()
         self.movieListbox.delete(0, END)
 
+        # 네이버 openAPI 읽어오기
         client_id = "tvo5aUWG9rwBq1YRMqyJ"
         client_secret = "40VkT1fuAS"
         header_parms ={"X-Naver-Client-Id":client_id,"X-Naver-Client-Secret":client_secret}
@@ -112,6 +113,8 @@ class SearchMovie:
             self.director.append(self.Alldata['items'][i]['director'].split('|')[0])
             self.actors.append(self.Alldata['items'][i]['actor'].replace('|', ', '))
             self.rating.append(float(self.Alldata['items'][i]['userRating']))
+
+
 
         self.showTitle()
 
@@ -139,6 +142,20 @@ class SearchMovie:
         self.linkL.place(x=0,y=400)
         self.linkL.bind("<Button-1>", lambda e: self.callback(self.link[self.indexInfo]))
 
+        # 영화진흥회 openAPI 읽어오기
+        dayOfficeURL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieList.json?key=edfd0508a0320efa8abbe1eeba097a94&movieNm="
+        dayOfficeURL += self.title[self.indexInfo]
+        res = requests.get(dayOfficeURL)
+        text = res.text
+        d = json.loads(text)
+        code = []
+        for b in d['movieListResult']['movieList']:
+            print(b['movieNm'])
+            if b['movieNm'] == self.title[self.indexInfo]:
+                code.append(b['movieCd'])
+        print(code)
+
+        # 영화 이미지 띄우기
         if len(self.image) == 0:
             return
 
