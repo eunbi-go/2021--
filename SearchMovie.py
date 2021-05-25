@@ -80,12 +80,10 @@ class SearchMovie:
         self.labelActors2 = Label(self.mainWnd, font=("Courier",10), text=' ')
         self.labelActors2.pack()
         self.labelActors2.place(x=300,y=320)
-
-        self.labelActors3 = Label(self.mainWnd, font=("Courier",10), text=' ')
-        self.labelActors3.pack()
-        self.labelActors3.place(x=300,y=350)
-
-
+        # 하이퍼 텍스트 링크
+        self.labelTextL = Label(self.mainWnd, font=('Courier',10), text=' ')
+        self.labelTextL.pack()
+        self.labelTextL.place(x=0,y=400)
 
         self.mainWnd.mainloop()
 
@@ -137,10 +135,11 @@ class SearchMovie:
         else:
             self.labelActors.config(text=self.actors[self.indexInfo])
             self.labelActors2.config(text=' ')
-        print(strLen)
-        print(self.actors[self.indexInfo])
 
         self.labelRate.config(text=self.rating[self.indexInfo])
+        self.labelTextL.config(text=self.link[self.indexInfo])
+        print(self.link[self.indexInfo])
+
         if len(self.image) == 0:
             return
 
