@@ -10,6 +10,7 @@ import urllib
 import urllib.request
 from io import BytesIO
 from PIL import Image,ImageTk
+import webbrowser
 
 class SearchMovie:
     def __init__(self):
@@ -80,10 +81,6 @@ class SearchMovie:
         self.labelActors2 = Label(self.mainWnd, font=("Courier",10), text=' ')
         self.labelActors2.pack()
         self.labelActors2.place(x=300,y=320)
-        # 하이퍼 텍스트 링크
-        self.labelTextL = Label(self.mainWnd, font=('Courier',10), text=' ')
-        self.labelTextL.pack()
-        self.labelTextL.place(x=0,y=400)
 
         self.mainWnd.mainloop()
 
@@ -137,8 +134,10 @@ class SearchMovie:
             self.labelActors2.config(text=' ')
 
         self.labelRate.config(text=self.rating[self.indexInfo])
-        self.labelTextL.config(text=self.link[self.indexInfo])
-        print(self.link[self.indexInfo])
+        self.linkL = Label(self.mainWnd, text='클릭!', cursor='hand2')
+        self.linkL.pack()
+        self.linkL.place(x=0,y=400)
+        self.linkL.bind("<Button-1>", lambda e: self.callback(self.link[self.indexInfo]))
 
         if len(self.image) == 0:
             return
@@ -155,3 +154,6 @@ class SearchMovie:
         imgL.pack()
         imgL.place(x=200,y=100)
         imgL.config(image=image2)
+
+    def callback(self, url):
+        webbrowser.open_new(url)
