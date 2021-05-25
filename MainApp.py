@@ -236,9 +236,5 @@ class MainGUI:
         thirdSales = Label(self.BoxOfficeWnd, text=self.showCnt[self.dayRankIdx+2], font=NmFont)
         thirdSales.place(x=770, y=300)
 
-    def LoadInfo(self):
-        pass
-
-
 
 MainGUI()
