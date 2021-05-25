@@ -73,6 +73,7 @@ class SearchMovie:
 
     def search(self):
         self.strSearch = self.movieNmEt.get()
+        self.movieListbox.delete(0, END)
 
         client_id = "tvo5aUWG9rwBq1YRMqyJ"
         client_secret = "40VkT1fuAS"
