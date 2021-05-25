@@ -13,6 +13,7 @@ class SearchMovie:
         self.mainWnd = Tk()
         self.mainWnd.geometry("600x400")
         self.mainWnd.title("영화 검색")
+        self.movieCnt = 0
 
         explainL = Label(self.mainWnd, text='영화 제목', font=("Courier",15))
         explainL.place(x=0,y=0)
@@ -35,33 +36,38 @@ class SearchMovie:
         dateL = Label(self.mainWnd, text='개봉일', font=("Courier",15))
         dateL.place(x=200,y=100)
 
-        self.dateEt = Entry(self.mainWnd, bd=5)
-        self.dateEt.pack()
-        self.dateEt.place(x=250,y=100, width=100,height=40)
-
         # 감독
         directorL = Label(self.mainWnd, text='감독', font=("Courier",15))
         directorL.place(x=200,y=150)
 
-        self.directorEt = Entry(self.mainWnd, bd=5)
-        self.directorEt.pack()
-        self.directorEt.place(x=250,y=150, width=100,height=40)
-
         # 출연 배우
-        actorsL = Label(self.mainWnd, text='감독', font=("Courier",15))
+        actorsL = Label(self.mainWnd, text='출연배우', font=("Courier",15))
         actorsL.place(x=200,y=200)
 
-        self.actorsEt = Entry(self.mainWnd, bd=5)
-        self.actorsEt.pack()
-        self.actorsEt.place(x=250,y=200, width=100,height=40)
-
         # 평점
-        ratingL = Label(self.mainWnd, text='감독', font=("Courier",15))
+        ratingL = Label(self.mainWnd, text='평점', font=("Courier",15))
         ratingL.place(x=200,y=250)
 
-        self.ratingEt = Entry(self.mainWnd, bd=5)
-        self.ratingEt.pack()
-        self.ratingEt.place(x=250,y=250, width=100,height=40)
+        # 개봉일
+        self.labelDate = Label(self.mainWnd, font=("Courier",15), text=' ')
+        self.labelDate.pack()
+        self.labelDate.place(x=300,y=100)
+        # 감독
+        self.labelDirector = Label(self.mainWnd, font=("Courier",15), text=' ')
+        self.labelDirector.pack()
+        self.labelDirector.place(x=300,y=150)
+        # 출연배우
+        self.labelActors = Label(self.mainWnd, font=("Courier",15), text=' ')
+        self.labelActors.pack()
+        self.labelActors.place(x=300,y=200)
+        # 평점
+        self.labelRate = Label(self.mainWnd, font=("Courier",15), text=' ')
+        self.labelRate.pack()
+        self.labelRate.place(x=300,y=250)
+
+        # 정보 보기 버튼
+        self.infoBt = Button(self.mainWnd, text='정보보기', command=self.showInfo)
+        self.infoBt.place(x=400,y=100)
 
         self.mainWnd.mainloop()
 
@@ -91,8 +97,15 @@ class SearchMovie:
             self.actors.append(self.Alldata['items'][i]['actor'].split('|')[:-1])
             self.rating.append(float(self.Alldata['items'][i]['userRating']))
 
-        self.showInfo()
+        self.showTitle()
 
-    def showInfo(self):
+    def showTitle(self):
         for i in range(self.movieCnt):
             self.movieListbox.insert(i, self.title[i])
+
+    def showInfo(self):
+        self.indexInfo = self.movieListbox.curselection()[0]
+        self.labelDate.config(text=self.date[self.indexInfo])
+        self.labelDirector.config(text=self.director[self.indexInfo])
+        self.labelActors.config(text=self.actors[self.indexInfo])
+        self.labelRate.config(text=self.rating[self.indexInfo])
