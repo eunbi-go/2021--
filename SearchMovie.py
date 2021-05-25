@@ -18,17 +18,29 @@ class SearchMovie:
         self.mainWnd.title("영화 검색")
         self.movieCnt = 0
 
-        explainL = Label(self.mainWnd, text='영화 제목', font=("Courier",15))
-        explainL.place(x=0,y=0)
-
         self.movieNmEt = Entry(self.mainWnd, bd=5)
         self.movieNmEt.pack()
-        self.movieNmEt.place(x=0,y=30, width=100,height=40)
+        self.movieNmEt.place(x=110,y=30, width=100,height=40)
 
         searchBt = Button(self.mainWnd, font=('Courier',15), text='검색',
                         command=self.search)
         searchBt.pack()
-        searchBt.place(x=100,y=30)
+        searchBt.place(x=220,y=30)
+
+        # 정보 보기 버튼
+        self.infoBt = Button(self.mainWnd, font=('Courier',15), text='정보보기',
+                            command=self.showInfo)
+        self.infoBt.place(x=290,y=30)
+
+        # 아이콘 이미지
+        global photo
+        photo = PhotoImage(file='movie.gif', master=self.mainWnd)
+        photoL = Label(self.mainWnd, image=photo)
+        photoL.pack()
+        photoL.place(x=0,y=0)
+        l1 = Label(self.mainWnd, text='영화 제목 검색', font=('Courier',20))
+        l1.pack()
+        l1.place(x=110,y=0)
 
         # 영화 정보 표기
         self.movieListbox = Listbox(self.mainWnd, width=25,height=18, relief='solid')
@@ -66,9 +78,7 @@ class SearchMovie:
         self.labelRate.pack()
         self.labelRate.place(x=300,y=250)
 
-        # 정보 보기 버튼
-        self.infoBt = Button(self.mainWnd, text='정보보기', command=self.showInfo)
-        self.infoBt.place(x=400,y=100)
+
 
         self.mainWnd.mainloop()
 
