@@ -107,7 +107,7 @@ class SearchMovie:
             self.image.append(self.Alldata['items'][i]['image'])
             self.date.append(self.Alldata['items'][i]['pubDate'])
             self.director.append(self.Alldata['items'][i]['director'].split('|')[0])
-            self.actors.append(self.Alldata['items'][i]['actor'].split('|')[:-1])
+            self.actors.append(self.Alldata['items'][i]['actor'].replace('|', ', '))
             self.rating.append(float(self.Alldata['items'][i]['userRating']))
 
         self.showTitle()
