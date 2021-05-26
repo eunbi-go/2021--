@@ -149,11 +149,17 @@ class SearchMovie:
         text = res.text
         d = json.loads(text)
         code = []
+        name = []
+        genre = []
         for b in d['movieListResult']['movieList']:
-            print(b['movieNm'])
-            if b['movieNm'] == self.title[self.indexInfo]:
-                code.append(b['movieCd'])
+            #if b['movieNm'] == self.title[self.indexInfo]:
+            code.append(b['openDt'])
+            name.append(b['movieNm'])
+            genre.append(b['genreAlt'])
         print(code)
+        print(name)
+        print(self.title[self.indexInfo])
+
 
         # 영화 이미지 띄우기
         if len(self.image) == 0:
