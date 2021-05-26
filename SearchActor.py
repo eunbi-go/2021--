@@ -29,7 +29,8 @@ class SearchActor:
         self.infoBt.place(x=290,y=30)
 
     def showInfo(self):
-        dayOfficeURL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/people/searchPeopleList.json?key=edfd0508a0320efa8abbe1eeba097a94"
+        dayOfficeURL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/people/searchPeopleList.json?key=edfd0508a0320efa8abbe1eeba097a94&peopleNm="
+        dayOfficeURL += self.movieNmEt.get()
         res = requests.get(dayOfficeURL)
         text = res.text
         d = json.loads(text)
