@@ -34,6 +34,23 @@ class SearchActor:
         res = requests.get(dayOfficeURL)
         text = res.text
         d = json.loads(text)
+        code = ' '
         for b in d['peopleListResult']['peopleList']:
-            print(b)
-        pass
+            code = b['peopleCd']
+
+        dayOfficeURL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/people/searchPeopleInfo.json?key=edfd0508a0320efa8abbe1eeba097a94&peopleCd="
+        dayOfficeURL += code
+        res = requests.get(dayOfficeURL)
+        text = res.text
+        d = json.loads(text)
+        cd = []
+        sex = []
+        filmos = []
+        for b in d['peopleInfoResult']['peopleInfo']:
+            cd.append(b['peopleCd'])
+            sex.append(b['sex'])
+            filmos.append(b['filmos'])
+
+        print(cd)
+        print(sex)
+        print(filmos)
