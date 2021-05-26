@@ -54,6 +54,9 @@ class SearchMovie:
         # 평점
         ratingL = Label(self.mainWnd, text='평점', font=("Courier",15))
         ratingL.place(x=200,y=230)
+        # 장르
+        genreL = Label(self.mainWnd, text='장르', font=('Courier',15))
+        genreL.place(x=400,y=230)
         # 감독
         directorL = Label(self.mainWnd, text='감독', font=("Courier",15))
         directorL.place(x=200,y=260)
@@ -69,6 +72,10 @@ class SearchMovie:
         self.labelRate = Label(self.mainWnd, font=("Courier",15), text=' ')
         self.labelRate.pack()
         self.labelRate.place(x=300,y=230)
+        # 장르
+        self.labelGenre = Label(self.mainWnd, font=('Courier',10), text=' ')
+        self.labelGenre.pack()
+        self.labelGenre.place(x=450,y=230)
         # 감독
         self.labelDirector = Label(self.mainWnd, font=("Courier",15), text=' ')
         self.labelDirector.pack()
@@ -159,6 +166,7 @@ class SearchMovie:
         print(code)
         print(name)
         print(self.title[self.indexInfo])
+        self.labelGenre.config(text=genre)
 
 
         # 영화 이미지 띄우기
