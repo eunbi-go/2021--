@@ -45,9 +45,9 @@ class SearchActor:
         res = requests.get(dayOfficeURL)
         text = res.text
         d = json.loads(text)
-        cd = []
         sex = []
-        filmos = []
+        movieNm = []
         for b in d['peopleInfoResult']['peopleInfo']['filmos']:
-            filmos.append(b)
-        print(filmos)
+            movieNm.append(b['movieNm'])
+        print(movieNm)
+        self.info = d['peopleInfoResult']['peopleInfo']
