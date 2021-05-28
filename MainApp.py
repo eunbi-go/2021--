@@ -9,24 +9,28 @@ from SearchMovie import *
 from SearchActor import *
 
 mainWnd = Tk()
-mainWnd.geometry("800x600")
+mainWnd.geometry("900x600")
 mainWnd.title("영화 정보 검색 앱")
-#mainWnd.configure(bg='black')
+mainWnd.configure(bg='black')
 
 
 Font = font.Font(mainWnd, size=20, weight='bold', family='Consolas')
-mainText = Label(mainWnd, font=Font, text='영화 정보 검색 앱')
-mainText.pack()
-mainText.place(x=30)
 
-notebook = tkinter.ttk.Notebook(mainWnd, width=800,height=600)
+notebook = tkinter.ttk.Notebook(mainWnd, width=900,height=600)
 notebook.pack()
 
 frameBoxOffice = Frame(mainWnd)
-notebook.add(frameBoxOffice, text='박스오피스')
+global photo
+photo = PhotoImage(file='box.png', master=frameBoxOffice)
+notebook.add(frameBoxOffice, image=photo)
+
+frame2 = Frame(mainWnd)
+global photo2
+photo2 = PhotoImage(file='movie0.png', master=frameBoxOffice)
+notebook.add(frame2, image=photo2)
 
 class BoxOfficeRank:
-    def __init__(self):
+    def __init__(self, frame):
         self.dayRankIdx = 0
         # 막대 그래프
         self.graphW = 800
@@ -34,9 +38,8 @@ class BoxOfficeRank:
         self.graphBar = (self.graphW-10)/10
         self.graphStart = False
 
-        self.BoxOfficeWnd = frameBoxOffice
-        #self.BoxOfficeWnd.geometry("1000x500")
-        #self.BoxOfficeWnd.title("박스 오피스 순위")
+        self.BoxOfficeWnd = frame
+        self.BoxOfficeWnd.config(bg='white')
         tmpFont = font.Font(self.BoxOfficeWnd, size=20, weight='bold', family='Consolas')
 
         frame = Frame(self.BoxOfficeWnd)
@@ -47,78 +50,87 @@ class BoxOfficeRank:
         dayEt = Entry(self.BoxOfficeWnd, bd=5)
 
         yearEt.pack()
-        yearEt.place(x=10, y=10, width=50, height=40)
+        yearEt.place(x=15, y=25, width=50, height=40)
         monthEt.pack()
-        monthEt.place(x=60, y=10, width=50, height=40)
+        monthEt.place(x=65, y=25, width=50, height=40)
         dayEt.pack()
-        dayEt.place(x=110, y=10, width=50, height=40)
+        dayEt.place(x=115, y=25, width=50, height=40)
 
-        searchBt = Button(self.BoxOfficeWnd, font=tmpFont, text='검색', command=self.ShowRank)
+        global searchImg
+        searchImg = PhotoImage(file='search.png')
+        searchBt = Button(self.BoxOfficeWnd, font=tmpFont,
+                          image=searchImg, command=self.ShowRank)
         searchBt.pack()
         searchBt.place(x=180, y=10)
 
-        nextBt = Button(self.BoxOfficeWnd, font=tmpFont, text='다음', command=self.NextPage)
+        global nextImg
+        nextImg = PhotoImage(file='next.png', master=self.BoxOfficeWnd)
+        nextBt = Button(self.BoxOfficeWnd, font=tmpFont, text='다음', command=self.NextPage, image=nextImg)
         nextBt.pack()
-        nextBt.place(x=300,y=10)
+        nextBt.place(x=840,y=200)
 
-        preBt = Button(self.BoxOfficeWnd, font=tmpFont, text='이전', command=self.PrePage)
+        global preImg
+        preImg = PhotoImage(file='pre.png', master=self.BoxOfficeWnd)
+        preBt = Button(self.BoxOfficeWnd, font=tmpFont, text='이전', command=self.PrePage, image=preImg)
         preBt.pack()
-        preBt.place(x=350,y=10)
+        preBt.place(x=10,y=200)
 
-        graphBt = Button(self.BoxOfficeWnd, font=tmpFont, text='그래프', command=self.BoxOfficeGraph)
+        global graphImg
+        graphImg = PhotoImage(file='graph.png', master=self.BoxOfficeWnd)
+        graphBt = Button(self.BoxOfficeWnd, font=tmpFont, text='그래프', command=self.BoxOfficeGraph, image=graphImg)
         graphBt.pack()
-        graphBt.place(x=400,y=10)
+        graphBt.place(x=250,y=10)
 
         # 영화 제목
-        self.labelNm1 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ')
+        self.labelNm1 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ', bg='white')
         self.labelNm1.pack()
-        self.labelNm1.place(x=150,y=100)
-        self.labelNm2 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ')
+        self.labelNm1.place(x=150,y=150)
+        self.labelNm2 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ', bg='white')
         self.labelNm2.pack()
-        self.labelNm2.place(x=150,y=200)
-        self.labelNm3 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ')
+        self.labelNm2.place(x=150,y=250)
+        self.labelNm3 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ', bg='white')
         self.labelNm3.pack()
-        self.labelNm3.place(x=150,y=300)
+        self.labelNm3.place(x=150,y=350)
 
-        self.labelAcc1 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ')
+        self.labelAcc1 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ', bg='white')
         self.labelAcc1.pack()
-        self.labelAcc1.place(x=380,y=100)
-        self.labelAcc2 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ')
+        self.labelAcc1.place(x=380,y=150)
+        self.labelAcc2 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ', bg='white')
         self.labelAcc2.pack()
-        self.labelAcc2.place(x=380,y=200)
-        self.labelAcc3 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ')
+        self.labelAcc2.place(x=380,y=250)
+        self.labelAcc3 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ', bg='white')
         self.labelAcc3.pack()
-        self.labelAcc3.place(x=380,y=300)
+        self.labelAcc3.place(x=380,y=350)
 
-        self.labelAud1 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ')
+        self.labelAud1 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ', bg='white')
         self.labelAud1.pack()
-        self.labelAud1.place(x=540,y=100)
-        self.labelAud2 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ')
+        self.labelAud1.place(x=540,y=150)
+        self.labelAud2 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ', bg='white')
         self.labelAud2.pack()
-        self.labelAud2.place(x=540,y=200)
-        self.labelAud3 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ')
+        self.labelAud2.place(x=540,y=250)
+        self.labelAud3 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ', bg='white')
         self.labelAud3.pack()
-        self.labelAud3.place(x=540,y=300)
+        self.labelAud3.place(x=540,y=350)
 
-        self.labelDayScn1 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ')
+        self.labelDayScn1 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ', bg='white')
         self.labelDayScn1.pack()
-        self.labelDayScn1.place(x=670,y=100)
-        self.labelDayScn2 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ')
+        self.labelDayScn1.place(x=670,y=150)
+        self.labelDayScn2 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ', bg='white')
         self.labelDayScn2.pack()
-        self.labelDayScn2.place(x=670,y=200)
-        self.labelDayScn3 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ')
+        self.labelDayScn2.place(x=670,y=250)
+        self.labelDayScn3 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ', bg='white')
         self.labelDayScn3.pack()
-        self.labelDayScn3.place(x=670,y=300)
+        self.labelDayScn3.place(x=670,y=350)
 
-        self.labelDayCnt1 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ')
+        self.labelDayCnt1 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ', bg='white')
         self.labelDayCnt1.pack()
-        self.labelDayCnt1.place(x=770,y=100)
-        self.labelDayCnt2 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ')
+        self.labelDayCnt1.place(x=770,y=150)
+        self.labelDayCnt2 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ', bg='white')
         self.labelDayCnt2.pack()
-        self.labelDayCnt2.place(x=770,y=200)
-        self.labelDayCnt3 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ')
+        self.labelDayCnt2.place(x=770,y=250)
+        self.labelDayCnt3 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ', bg='white')
         self.labelDayCnt3.pack()
-        self.labelDayCnt3.place(x=770,y=300)
+        self.labelDayCnt3.place(x=770,y=350)
 
         self.BoxOfficeWnd.mainloop()
 
@@ -218,15 +230,14 @@ class BoxOfficeRank:
         NmFont = font.Font(mainWnd, size=30, weight='bold', family='Consolas')
 
         # 순위
-        firstNameL = Label(self.BoxOfficeWnd, font=("Courier",20), text='순위')
-        firstNameL.place(x=25, y=60)
-        rankFont = font.Font(family="Courier", size=16, weight="bold", slant="italic")
-        firstNameL = Label(self.BoxOfficeWnd, font=("Courier",40), text=self.rank[self.dayRankIdx])
-        firstNameL.place(x=30, y=100)
-        secondNameL = Label(self.BoxOfficeWnd, font=("Courier",40), text=self.rank[self.dayRankIdx+1])
-        secondNameL.place(x=30, y=200)
-        thirdNameL = Label(self.BoxOfficeWnd, font=("Courier",40), text=self.rank[self.dayRankIdx+2])
-        thirdNameL.place(x=30,y=300)
+        firstNameL = Label(self.BoxOfficeWnd, font=("Courier",20), text='순위', bg='white')
+        firstNameL.place(x=50, y=80)
+        firstNameL = Label(self.BoxOfficeWnd, font=("Courier",20), text=self.rank[self.dayRankIdx], bg='white')
+        firstNameL.place(x=60, y=160)
+        secondNameL = Label(self.BoxOfficeWnd, font=("Courier",20), text=self.rank[self.dayRankIdx+1], bg='white')
+        secondNameL.place(x=60, y=260)
+        thirdNameL = Label(self.BoxOfficeWnd, font=("Courier",20), text=self.rank[self.dayRankIdx+2], bg='white')
+        thirdNameL.place(x=60,y=360)
 
         # 영화 이름
         #if len(string) > 10:
@@ -238,63 +249,56 @@ class BoxOfficeRank:
 
 
         # 영화 개봉일
-        firstOpenDt = Label(self.BoxOfficeWnd, text='영화 제목 / 개봉일', font=("Courier",15))
-        firstOpenDt.place(x=140, y=60)
-        firstOpenDt = Label(self.BoxOfficeWnd, text=openingDt[self.dayRankIdx], font=NmFont)
-        firstOpenDt.place(x=150, y=130)
-        secondOpenDt = Label(self.BoxOfficeWnd, text=openingDt[self.dayRankIdx+1], font=NmFont)
-        secondOpenDt.place(x=150, y=230)
-        thirdOpenDt = Label(self.BoxOfficeWnd, text=openingDt[self.dayRankIdx+2], font=NmFont)
-        thirdOpenDt.place(x=150, y=330)
+        firstOpenDt = Label(self.BoxOfficeWnd, text='영화 제목/개봉일', font=("Courier",17), bg='white')
+        firstOpenDt.place(x=135, y=80)
+        firstOpenDt = Label(self.BoxOfficeWnd, text=openingDt[self.dayRankIdx], font=("Courier",15), bg='white')
+        firstOpenDt.place(x=150, y=180)
+        secondOpenDt = Label(self.BoxOfficeWnd, text=openingDt[self.dayRankIdx+1], font=("Courier",15), bg='white')
+        secondOpenDt.place(x=150, y=280)
+        thirdOpenDt = Label(self.BoxOfficeWnd, text=openingDt[self.dayRankIdx+2], font=("Courier",15), bg='white')
+        thirdOpenDt.place(x=150, y=380)
 
         # 누적 매출액
-        firstOpenDt = Label(self.BoxOfficeWnd, text='누적 매출액', font=("Courier",12))
-        firstOpenDt.place(x=380, y=60)
+        firstOpenDt = Label(self.BoxOfficeWnd, text='누적 매출액', font=("Courier",12), bg='white')
+        firstOpenDt.place(x=380, y=80)
         self.labelAcc1.config(text=self.salesAcc[self.dayRankIdx])
         self.labelAcc2.config(text=self.salesAcc[self.dayRankIdx+1])
         self.labelAcc3.config(text=self.salesAcc[self.dayRankIdx+2])
 
         # 누적 관객수
-        firstOpenDt = Label(self.BoxOfficeWnd, text='누적 관객수', font=("Courier",12))
-        firstOpenDt.place(x=540, y=60)
+        firstOpenDt = Label(self.BoxOfficeWnd, text='누적 관객수', font=("Courier",12), bg='white')
+        firstOpenDt.place(x=540, y=80)
         self.labelAud1.config(text=self.audiAcc[self.dayRankIdx])
         self.labelAud2.config(text=self.audiAcc[self.dayRankIdx+1])
         self.labelAud3.config(text=self.audiAcc[self.dayRankIdx+2])
 
         # 해당 일자 상영한 스크린 수
-        firstOpenDt = Label(self.BoxOfficeWnd, text='당일 스크린', font=("Courier",12))
-        firstOpenDt.place(x=655, y=40)
-        firstOpenDt = Label(self.BoxOfficeWnd, text='상영 수', font=("Courier",12))
-        firstOpenDt.place(x=675, y=60)
+        firstOpenDt = Label(self.BoxOfficeWnd, text='당일 스크린', font=("Courier",12), bg='white')
+        firstOpenDt.place(x=655, y=60)
+        firstOpenDt = Label(self.BoxOfficeWnd, text='상영 수', font=("Courier",12), bg='white')
+        firstOpenDt.place(x=675, y=80)
         self.labelDayScn1.config(text=self.scrnCnt[self.dayRankIdx])
         self.labelDayScn2.config(text=self.scrnCnt[self.dayRankIdx+1])
         self.labelDayScn3.config(text=self.scrnCnt[self.dayRankIdx+2])
 
         # 해당 일자 상영된 횟수
-        firstOpenDt = Label(self.BoxOfficeWnd, text='당일 상영', font=("Courier",12))
-        firstOpenDt.place(x=760, y=40)
-        firstOpenDt = Label(self.BoxOfficeWnd, text='횟수', font=("Courier",12))
-        firstOpenDt.place(x=780, y=60)
+        firstOpenDt = Label(self.BoxOfficeWnd, text='당일 상영', font=("Courier",12), bg='white')
+        firstOpenDt.place(x=760, y=60)
+        firstOpenDt = Label(self.BoxOfficeWnd, text='횟수', font=("Courier",12), bg='white')
+        firstOpenDt.place(x=780, y=80)
         self.labelDayCnt1.config(text=self.showCnt[self.dayRankIdx])
         self.labelDayCnt2.config(text=self.showCnt[self.dayRankIdx+1])
         self.labelDayCnt3.config(text=self.showCnt[self.dayRankIdx+2])
 
 
 
+if notebook.select(frameBoxOffice) != True:
+    BoxOfficeRank(frameBoxOffice)
+elif notebook.select(frame2) != True:
+    SearchMovie(frame2)
 
 
 
-label1 = Button(frameBoxOffice, text='박스오피스', command=BoxOfficeRank)
-label1.pack()
-
-
-
-
-frame2 = Frame(mainWnd)
-notebook.add(frame2, text='영화검색')
-
-label2 = Label(frame2, text='영화')
-label2.pack()
 
         # 이미지
         #global photo
