@@ -36,13 +36,17 @@ movieNmEt = Entry(frame2, bd=5)
 movieNmEt.pack()
 movieNmEt.place(x=100,y=100, width=100,height=40)
 
-searchBt = Button(frame2, font=('Courier',15), text='검색',
+global searchImg2
+searchImg2 = PhotoImage(file='search.png')
+searchBt = Button(frame2, font=('Courier',15), image=searchImg2,
                   command=SearchMovie.search)
 searchBt.pack()
 searchBt.place(x=220,y=30)
 
 # 정보 보기 버튼
-infoBt = Button(frame2, font=('Courier',15), text='정보보기',
+global comfirmBt
+comfirmBt = PhotoImage(file='conff.png', master=frame2)
+infoBt = Button(frame2, font=('Courier',15), text='정보보기', image=comfirmBt,
                      command=SearchMovie.showInfo)
 infoBt.place(x=290,y=30)
 
