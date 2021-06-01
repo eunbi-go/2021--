@@ -35,26 +35,26 @@ notebook.add(frame2, image=photo2)
 frame2.config(bg='white')
 movieNmEt = Entry(frame2, bd=5, bg='white')
 movieNmEt.pack()
-movieNmEt.place(x=100,y=100, width=100,height=40)
+movieNmEt.place(x=200,y=100, width=100,height=40)
 
 global searchImg2
 searchImg2 = PhotoImage(file='search.png')
 searchBt = Button(frame2, font=('Courier',15), image=searchImg2, bg='white',
                   command=SearchMovie.search)
 searchBt.pack()
-searchBt.place(x=220,y=30)
+searchBt.place(x=200,y=30)
 
 # 정보 보기 버튼
 global comfirmBt
 comfirmBt = PhotoImage(file='conff.png', master=frame2)
 infoBt = Button(frame2, font=('Courier',15), text='정보보기', image=comfirmBt,
                      command=SearchMovie.showInfo, bg='white')
-infoBt.place(x=290,y=30)
+infoBt.place(x=270,y=30)
 
 # 영화 정보 표기
 movieListbox = Listbox(frame2, width=25,height=18, relief='solid', bg='white')
 movieListbox.pack()
-movieListbox.place(x=0,y=90)
+movieListbox.place(x=10,y=90)
 
 # 개봉일
 dateL = Label(frame2, text='개봉년도', font=("Courier",15), bg='white')
