@@ -32,13 +32,14 @@ photo2 = PhotoImage(file='movie0.png', master=frameBoxOffice)
 notebook.add(frame2, image=photo2)
 
 # 영화 검색
-movieNmEt = Entry(frame2, bd=5)
+frame2.config(bg='white')
+movieNmEt = Entry(frame2, bd=5, bg='white')
 movieNmEt.pack()
 movieNmEt.place(x=100,y=100, width=100,height=40)
 
 global searchImg2
 searchImg2 = PhotoImage(file='search.png')
-searchBt = Button(frame2, font=('Courier',15), image=searchImg2,
+searchBt = Button(frame2, font=('Courier',15), image=searchImg2, bg='white',
                   command=SearchMovie.search)
 searchBt.pack()
 searchBt.place(x=220,y=30)
@@ -47,52 +48,52 @@ searchBt.place(x=220,y=30)
 global comfirmBt
 comfirmBt = PhotoImage(file='conff.png', master=frame2)
 infoBt = Button(frame2, font=('Courier',15), text='정보보기', image=comfirmBt,
-                     command=SearchMovie.showInfo)
+                     command=SearchMovie.showInfo, bg='white')
 infoBt.place(x=290,y=30)
 
 # 영화 정보 표기
-movieListbox = Listbox(frame2, width=25,height=18, relief='solid')
+movieListbox = Listbox(frame2, width=25,height=18, relief='solid', bg='white')
 movieListbox.pack()
 movieListbox.place(x=0,y=90)
 
 # 개봉일
-dateL = Label(frame2, text='개봉년도', font=("Courier",15))
+dateL = Label(frame2, text='개봉년도', font=("Courier",15), bg='white')
 dateL.place(x=200,y=200)
 # 평점
-ratingL = Label(frame2, text='평점', font=("Courier",15))
+ratingL = Label(frame2, text='평점', font=("Courier",15), bg='white')
 ratingL.place(x=200,y=230)
 # 장르
-genreL = Label(frame2, text='장르', font=('Courier',15))
+genreL = Label(frame2, text='장르', font=('Courier',15), bg='white')
 genreL.place(x=400,y=230)
 # 감독
-directorL = Label(frame2, text='감독', font=("Courier",15))
+directorL = Label(frame2, text='감독', font=("Courier",15), bg='white')
 directorL.place(x=200,y=260)
 # 출연배우
-actorsL = Label(frame2, text='출연배우', font=("Courier",15))
+actorsL = Label(frame2, text='출연배우', font=("Courier",15), bg='white')
 actorsL.place(x=200,y=290)
 
 # 개봉일
-labelDate = Label(frame2, font=("Courier",15), text=' ')
+labelDate = Label(frame2, font=("Courier",15), text=' ', bg='white')
 labelDate.pack()
 labelDate.place(x=300,y=200)
 # 평점
-labelRate = Label(frame2, font=("Courier",15), text=' ')
+labelRate = Label(frame2, font=("Courier",15), text=' ', bg='white')
 labelRate.pack()
 labelRate.place(x=300,y=230)
 # 장르
-labelGenre = Label(frame2, font=('Courier',10), text=' ')
+labelGenre = Label(frame2, font=('Courier',10), text=' ', bg='white')
 labelGenre.pack()
 labelGenre.place(x=450,y=230)
 # 감독
-labelDirector = Label(frame2, font=("Courier",15), text=' ')
+labelDirector = Label(frame2, font=("Courier",15), text=' ', bg='white')
 labelDirector.pack()
 labelDirector.place(x=300,y=260)
 # 출연배우
-labelActors = Label(frame2, font=("Courier",10), text=' ')
+labelActors = Label(frame2, font=("Courier",10), text=' ', bg='white')
 labelActors.pack()
 labelActors.place(x=300,y=290)
 
-labelActors2 = Label(frame2, font=("Courier",10), text=' ')
+labelActors2 = Label(frame2, font=("Courier",10), text=' ', bg='white')
 labelActors2.pack()
 labelActors2.place(x=300,y=320)
 
