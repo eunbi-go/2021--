@@ -47,9 +47,16 @@ searchBt.place(x=200,y=30)
 # 정보 보기 버튼
 global comfirmBt
 comfirmBt = PhotoImage(file='conff.png', master=frame2)
-infoBt = Button(frame2, font=('Courier',15), text='정보보기', image=comfirmBt,
+infoBt = Button(frame2, font=('Courier',15), image=comfirmBt,
                      command=SearchMovie.showInfo, bg='white')
 infoBt.place(x=270,y=30)
+
+# 지메일 전송 버튼
+global mailImg
+mailImg = PhotoImage(file='mail.png', master=frame2)
+mailBt = Button(frame2, font=('Courier',15), image=mailImg,
+                command=SearchMovie.showInfo, bg='white')
+mailBt.place(x=340,y=30)
 
 # 영화 정보 표기
 movieListbox = Listbox(frame2, width=25,height=18, relief='solid', bg='white')
