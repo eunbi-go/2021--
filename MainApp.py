@@ -7,6 +7,8 @@ import json
 from PIL import Image
 from io import BytesIO
 import webbrowser
+import smtplib
+from email.mime.text import  MIMEText
 
 from SearchActor import *
 
@@ -207,6 +209,14 @@ def showInfo():
     imgL.config(image=image2)
 
 
+def sendMail_MovieInfo():
+    s = smtplib.SMTP('smtp.gmail.com', 587)
+    s.starttls()
+    s.login('geunbi38@gmail.com', 'lidmnbysnqfzlfcp')
+    msg = MIMEText('ㅅㅄㅄㅂ')
+    msg['Subject'] = '제목이다'
+    s.sendmail('nono9910@naver.com', 'geunbi38@gmail.com', msg.as_string())
+    s.quit()
 
 # 정보 보기 버튼
 global comfirmBt
@@ -219,7 +229,7 @@ infoBt.place(x=270,y=30)
 global mailImg
 mailImg = PhotoImage(file='mail.png', master=frame2)
 mailBt = Button(frame2, font=('Courier',15), image=mailImg,
-                command=showInfo, bg='white')
+                command=sendMail_MovieInfo, bg='white')
 mailBt.place(x=340,y=30)
 
 # 영화 정보 표기
