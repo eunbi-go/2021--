@@ -36,7 +36,7 @@ notebook.add(frame2, image=photo2)
 frame2.config(bg='white')
 movieNmEt = Entry(frame2, bd=5, bg='white')
 movieNmEt.pack()
-movieNmEt.place(x=200,y=100, width=100,height=40)
+movieNmEt.place(x=15,y=40, width=100,height=40)
 
 class SearchMovie:
     def __init__(self):
@@ -77,89 +77,7 @@ class SearchMovie:
         for i in range(self.movieCnt):
             movieListbox.insert(i, self.title[i])
 
-    def showInfo(self):
-        self.indexInfo = movieListbox.curselection()[0]
-        labelDate.config(text=self.date[self.indexInfo])
-        directorL.config(text=self.director[self.indexInfo])
-        strLen = len(self.actors[self.indexInfo])
-        if strLen > 17:
-            begStr = self.actors[self.indexInfo][0:17]
-            midStr = self.actors[self.indexInfo][17:]
-            actorsL.config(text=begStr)
-            #self.labelActors2.config(text=midStr)
-        else:
-            actorsL.config(text=self.actors[self.indexInfo])
-            #self.labelActors2.config(text=' ')
 
-        labelRate.config(text=self.rating[self.indexInfo])
-
-        # 네이버로 열기
-        self.linkL = Label(self.mainWnd, text='네이버로 열기', cursor='hand2')
-        self.linkL.pack()
-        self.linkL.place(x=320,y=180)
-        self.linkL.bind("<Button-1>", lambda e: self.callback(self.naverlink[self.indexInfo]))
-
-        # 관련 뉴스 - 네이버 openAPI 읽어오기
-        client_id = "tvo5aUWG9rwBq1YRMqyJ"
-        client_secret = "40VkT1fuAS"
-        header_parms ={"X-Naver-Client-Id":client_id,"X-Naver-Client-Secret":client_secret}
-        search_word = self.title[self.indexInfo] #검색어
-        encode_type = 'json' #출력 방식 json 또는 xml
-        max_display = 3 #출력 뉴스 수
-        sort = 'sim' #결과값의 정렬기준 시간순 date, 관련도 순 sim
-        start = 1 # 출력 위치
-
-        url = f"https://openapi.naver.com/v1/search/news.{encode_type}?query={search_word}&display={str(int(max_display))}&sort={sort}"
-        res=requests.get(url,headers=header_parms)
-        datas = res.json()
-        links = datas['items']
-        self.link = []
-        for i in links:
-            self.link.append(i['link'])
-        for i in range(max_display):
-            string = '관련뉴스 ' + str(i+1)
-            self.linkL = Label(self.mainWnd, text=string, cursor='hand2')
-            self.linkL.pack()
-            self.linkL.place(x=410,y=120 + i * 30)
-            self.linkL.bind("<Button-1>", lambda e: self.callback(self.link[i]))
-
-
-        # 영화진흥회 openAPI 읽어오기
-        dayOfficeURL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieList.json?key=edfd0508a0320efa8abbe1eeba097a94&movieNm="
-        dayOfficeURL += self.title[self.indexInfo]
-        res = requests.get(dayOfficeURL)
-        text = res.text
-        d = json.loads(text)
-        code = []
-        name = []
-        genre = []
-        for b in d['movieListResult']['movieList']:
-            #if b['movieNm'] == self.title[self.indexInfo]:
-            code.append(b['openDt'])
-            name.append(b['movieNm'])
-            genre.append(b['genreAlt'])
-        self.labelGenre.config(text=genre)
-
-
-        # 영화 이미지 띄우기
-        if len(self.image) == 0:
-            return
-
-        url = self.image[self.indexInfo]
-        with urllib.request.urlopen(url) as u:
-            raw_data=u.read()
-
-        im=Image.open(BytesIO(raw_data))
-        global image2
-        image2=ImageTk.PhotoImage(im, master=self.mainWnd)
-
-        imgL = Label(self.mainWnd,height=100,width=100)
-        imgL.pack()
-        imgL.place(x=200,y=100)
-        imgL.config(image=image2)
-
-    def callback(self, url):
-        webbrowser.open_new(url)
 
 
 def search():
@@ -175,6 +93,13 @@ def search():
 
     Alldata = res.json()
     movieCnt = len(Alldata['items'])
+    global title
+    global naverlink
+    global image
+    global date
+    global director
+    global actors
+    global rating
     title = []
     naverlink = []
     image = []
@@ -196,18 +121,105 @@ def search():
         movieListbox.insert(i, title[i])
 
 
+
+def callback(url):
+    webbrowser.open_new(url)
+
+def showInfo():
+    indexInfo = movieListbox.curselection()[0]
+    labelDate.config(text=date[indexInfo])
+    directorL.config(text=director[indexInfo])
+    strLen = len(actors[indexInfo])
+    if strLen > 17:
+        begStr = actors[indexInfo][0:17]
+        midStr = actors[indexInfo][17:]
+        actorsL.config(text=begStr)
+        #self.labelActors2.config(text=midStr)
+    else:
+        actorsL.config(text=actors[indexInfo])
+        #self.labelActors2.config(text=' ')
+
+    labelRate.config(text=rating[indexInfo])
+
+    # 네이버로 열기
+    linkL = Label(frame2, text='네이버로 열기', cursor='hand2')
+    linkL.pack()
+    linkL.place(x=320,y=180)
+    linkL.bind("<Button-1>", lambda e: callback(naverlink[indexInfo]))
+
+    # 관련 뉴스 - 네이버 openAPI 읽어오기
+    client_id = "tvo5aUWG9rwBq1YRMqyJ"
+    client_secret = "40VkT1fuAS"
+    header_parms ={"X-Naver-Client-Id":client_id,"X-Naver-Client-Secret":client_secret}
+    search_word = title[indexInfo] #검색어
+    encode_type = 'json' #출력 방식 json 또는 xml
+    max_display = 3 #출력 뉴스 수
+    sort = 'sim' #결과값의 정렬기준 시간순 date, 관련도 순 sim
+    start = 1 # 출력 위치
+
+    url = f"https://openapi.naver.com/v1/search/news.{encode_type}?query={search_word}&display={str(int(max_display))}&sort={sort}"
+    res=requests.get(url,headers=header_parms)
+    datas = res.json()
+    links = datas['items']
+    link = []
+    for i in links:
+        link.append(i['link'])
+    for i in range(max_display):
+        string = '관련뉴스 ' + str(i+1)
+        linkL = Label(frame2, text=string, cursor='hand2')
+        linkL.pack()
+        linkL.place(x=410,y=120 + i * 30)
+        linkL.bind("<Button-1>", lambda e: callback(link[i]))
+
+
+    # 영화진흥회 openAPI 읽어오기
+    dayOfficeURL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieList.json?key=edfd0508a0320efa8abbe1eeba097a94&movieNm="
+    dayOfficeURL += title[indexInfo]
+    res = requests.get(dayOfficeURL)
+    text = res.text
+    d = json.loads(text)
+    code = []
+    name = []
+    genre = []
+    for b in d['movieListResult']['movieList']:
+        #if b['movieNm'] == self.title[self.indexInfo]:
+        code.append(b['openDt'])
+        name.append(b['movieNm'])
+        genre.append(b['genreAlt'])
+    labelGenre.config(text=genre)
+
+
+    # 영화 이미지 띄우기
+    if len(image) == 0:
+        return
+
+    url = image[indexInfo]
+    with urllib.request.urlopen(url) as u:
+        raw_data=u.read()
+
+    im=Image.open(BytesIO(raw_data))
+    global image2
+    image2=ImageTk.PhotoImage(im, master=frame2)
+
+    imgL = Label(frame2,height=100,width=100)
+    imgL.pack()
+    imgL.place(x=200,y=100)
+    imgL.config(image=image2)
+
+
+
 # 정보 보기 버튼
 global comfirmBt
 comfirmBt = PhotoImage(file='conff.png', master=frame2)
 infoBt = Button(frame2, font=('Courier',15), image=comfirmBt,
-                     command=SearchMovie.showInfo, bg='white')
+                     command=showInfo, bg='white')
 infoBt.place(x=270,y=30)
 
 # 지메일 전송 버튼
 global mailImg
 mailImg = PhotoImage(file='mail.png', master=frame2)
 mailBt = Button(frame2, font=('Courier',15), image=mailImg,
-                command=SearchMovie.showInfo, bg='white')
+                command=showInfo, bg='white')
 mailBt.place(x=340,y=30)
 
 # 영화 정보 표기
