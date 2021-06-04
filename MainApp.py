@@ -32,7 +32,7 @@ global photo2
 photo2 = PhotoImage(file='movie0.png', master=frameBoxOffice)
 notebook.add(frame2, image=photo2)
 
-
+indexInfo = 0
 
 # 영화 검색
 frame2.config(bg='white')
@@ -213,8 +213,10 @@ def sendMail_MovieInfo():
     s = smtplib.SMTP('smtp.gmail.com', 587)
     s.starttls()
     s.login('geunbi38@gmail.com', 'lidmnbysnqfzlfcp')
-    msg = MIMEText('ㅅㅄㅄㅂ')
-    msg['Subject'] = '제목이다'
+    strMain = '영화 정보 알려드립니다 - ' + str(title[indexInfo])
+    strMsg = '제목 : ' + str(title[indexInfo]) + '\n' + "감독 : " + str(director[indexInfo]) + '\n' + "배우 : " + str(actors[indexInfo]) + '\n' + "평점 : " + str(rating[indexInfo])
+    msg = MIMEText(strMsg)
+    msg['Subject'] = strMain
     s.sendmail('nono9910@naver.com', 'geunbi38@gmail.com', msg.as_string())
     s.quit()
 
