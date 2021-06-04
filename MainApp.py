@@ -31,6 +31,13 @@ photo2 = PhotoImage(file='movie0.png', master=frameBoxOffice)
 notebook.add(frame2, image=photo2)
 
 
+
+# 영화 검색
+frame2.config(bg='white')
+movieNmEt = Entry(frame2, bd=5, bg='white')
+movieNmEt.pack()
+movieNmEt.place(x=200,y=100, width=100,height=40)
+
 class SearchMovie:
     def __init__(self):
         self.movieCnt = 0
@@ -87,7 +94,7 @@ class SearchMovie:
         labelRate.config(text=self.rating[self.indexInfo])
 
         # 네이버로 열기
-        self.linkL = Label(frame2, text='네이버로 열기', cursor='hand2')
+        self.linkL = Label(self.mainWnd, text='네이버로 열기', cursor='hand2')
         self.linkL.pack()
         self.linkL.place(x=320,y=180)
         self.linkL.bind("<Button-1>", lambda e: self.callback(self.naverlink[self.indexInfo]))
@@ -111,7 +118,7 @@ class SearchMovie:
             self.link.append(i['link'])
         for i in range(max_display):
             string = '관련뉴스 ' + str(i+1)
-            self.linkL = Label(frame2, text=string, cursor='hand2')
+            self.linkL = Label(self.mainWnd, text=string, cursor='hand2')
             self.linkL.pack()
             self.linkL.place(x=410,y=120 + i * 30)
             self.linkL.bind("<Button-1>", lambda e: self.callback(self.link[i]))
@@ -144,9 +151,9 @@ class SearchMovie:
 
         im=Image.open(BytesIO(raw_data))
         global image2
-        image2=ImageTk.PhotoImage(im, master=frame2)
+        image2=ImageTk.PhotoImage(im, master=self.mainWnd)
 
-        imgL = Label(frame2,height=100,width=100)
+        imgL = Label(self.mainWnd,height=100,width=100)
         imgL.pack()
         imgL.place(x=200,y=100)
         imgL.config(image=image2)
@@ -154,12 +161,39 @@ class SearchMovie:
     def callback(self, url):
         webbrowser.open_new(url)
 
-# 영화 검색
-frame2.config(bg='white')
-movieNmEt = Entry(frame2, bd=5, bg='white')
-movieNmEt.pack()
-movieNmEt.place(x=200,y=100, width=100,height=40)
 
+def search():
+    strSearch = movieNmEt.get()
+    movieListbox.delete(0, END)
+
+    # 네이버 openAPI 읽어오기
+    client_id = "tvo5aUWG9rwBq1YRMqyJ"
+    client_secret = "40VkT1fuAS"
+    header_parms ={"X-Naver-Client-Id":client_id,"X-Naver-Client-Secret":client_secret}
+    url = f"https://openapi.naver.com/v1/search/movie.json?query={strSearch}"
+    res=requests.get(url,headers=header_parms)
+
+    Alldata = res.json()
+    movieCnt = len(Alldata['items'])
+    title = []
+    naverlink = []
+    image = []
+    date = []
+    director = []
+    actors = []
+    rating = []
+
+    for i in range(movieCnt):
+        title.append(Alldata['items'][i]['title'].strip('</b>').replace('<b>','').replace('</b>',''))
+        naverlink.append(Alldata['items'][i]['link'])
+        image.append(Alldata['items'][i]['image'])
+        date.append(Alldata['items'][i]['pubDate'])
+        director.append(Alldata['items'][i]['director'].split('|')[0])
+        actors.append(Alldata['items'][i]['actor'].replace('|', ', '))
+        rating.append(float(Alldata['items'][i]['userRating']))
+
+    for i in range(movieCnt):
+        movieListbox.insert(i, title[i])
 
 
 # 정보 보기 버튼
@@ -184,7 +218,7 @@ movieListbox.place(x=10,y=90)
 global searchImg2
 searchImg2 = PhotoImage(file='search.png')
 searchBt = Button(frame2, font=('Courier',15), image=searchImg2, bg='white',
-                  command=SearchMovie.search)
+                  command=search)
 searchBt.pack()
 searchBt.place(x=200,y=30)
 
@@ -198,21 +232,17 @@ ratingL.place(x=200,y=230)
 genreL = Label(frame2, text='장르', font=('Courier',15), bg='white')
 genreL.place(x=400,y=230)
 # 감독
-global directorL
 directorL = Label(frame2, text='감독', font=("Courier",15), bg='white')
 directorL.place(x=200,y=260)
 # 출연배우
-global actorsL
 actorsL = Label(frame2, text='출연배우', font=("Courier",15), bg='white')
 actorsL.place(x=200,y=290)
 
 # 개봉일
-global labelDate
 labelDate = Label(frame2, font=("Courier",15), text=' ', bg='white')
 labelDate.pack()
 labelDate.place(x=300,y=200)
 # 평점
-global labelRate
 labelRate = Label(frame2, font=("Courier",15), text=' ', bg='white')
 labelRate.pack()
 labelRate.place(x=300,y=230)
@@ -232,6 +262,7 @@ labelActors.place(x=300,y=290)
 labelActors2 = Label(frame2, font=("Courier",10), text=' ', bg='white')
 labelActors2.pack()
 labelActors2.place(x=300,y=320)
+
 
 class BoxOfficeRank:
     def __init__(self, frame):
@@ -494,8 +525,6 @@ class BoxOfficeRank:
 
 
 BoxOfficeRank(frameBoxOffice)
-
-
 
 
 mainWnd.mainloop()
