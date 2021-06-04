@@ -11,12 +11,15 @@ import urllib.request
 from io import BytesIO
 from PIL import Image,ImageTk
 import webbrowser
+from bs4 import BeautifulSoup
 
-dayOfficeURL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieList.json?key=edfd0508a0320efa8abbe1eeba097a94&movieNm=귀멸의칼날"
-res = requests.get(dayOfficeURL)
-text = res.text
-d = json.loads(text)
-code = []
-for b in d['movieListResult']['movieList']:
-    print(b['movieNm'])
-print(len(d['movieListResult']['movieList']))
+url = "https://openapi.gg.go.kr/MovieTheater?SIGUN_NM="
+url += '시흥시'
+
+res = requests.get(url)
+soup = BeautifulSoup(res.content, 'html.parser')
+data = soup.find_all('row')
+
+for item in data:
+    nm = item.find('bizplc_nm')
+    print(nm)
