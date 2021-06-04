@@ -9,6 +9,8 @@ from io import BytesIO
 import webbrowser
 import smtplib
 from email.mime.text import  MIMEText
+from tkinter import ttk
+from bs4 import BeautifulSoup
 
 from SearchActor import *
 
@@ -22,6 +24,9 @@ Font = font.Font(mainWnd, size=20, weight='bold', family='Consolas')
 notebook = tkinter.ttk.Notebook(mainWnd, width=900,height=600)
 notebook.pack()
 
+def callback(url):
+    webbrowser.open_new(url)
+
 frameBoxOffice = Frame(mainWnd)
 global photo
 photo = PhotoImage(file='box.png', master=frameBoxOffice)
@@ -33,6 +38,58 @@ photo2 = PhotoImage(file='movie0.png', master=frameBoxOffice)
 notebook.add(frame2, image=photo2)
 
 indexInfo = 0
+
+framePos = Frame(mainWnd)
+global photo3
+photo3 = PhotoImage(file='pos.png', master=framePos)
+notebook.add(framePos, image=photo3)
+
+framePos.config(bg='white')
+
+Label(framePos, text='경기도', font=("Courier",15), bg='white').place(x=10,y=10)
+Label(framePos, text='군/시', font=("Courier",15), bg='white').place(x=100,y=10)
+
+# 상영 지역
+strLocation = StringVar()
+combo = ttk.Combobox(framePos, textvariable=strLocation, width=10)
+combo['value'] = ('가평군', '고양시', '광명시', '광주시', '구리시', '군포시', '김포시', '남양주시', '동두천시', '부천시', '성남시', '수원시', '시흥시', '안산시', '안성시', '안양시', '양주시', '양평군', '여주시', '연천군', '오산시', '용인시', '의왕시', '의정부시', '이천시', '파주시', '포천시', '하남시', '화성시')
+combo.current(0)
+combo.pack()
+combo.place(x=100,y=40)
+
+
+def searchTheaters():
+    strPos = strLocation.get()
+    url = "https://openapi.gg.go.kr/MovieTheater?SIGUN_NM="
+    url += strPos
+
+    res = requests.get(url)
+    soup = BeautifulSoup(res.content, 'html.parser')
+    data = soup.find_all('row')
+    global theaters
+    theaters = []
+    cnt = 0
+    for item in data:
+        nm = item.find('bizplc_nm').string
+        theaters.append(nm)
+
+        linkL = Label(framePos, text=nm, cursor='hand2')
+        linkL.pack()
+        linkL.place(x=10,y=200+cnt*50)
+        linkL.bind("<Button-1>", lambda e: callback(naverlink[indexInfo]))
+
+        cnt += 1
+
+
+# 영화관 찾기
+global searchImg3
+searchImg3 = PhotoImage(file='search.png')
+searchBt = Button(framePos, font=('Courier',15), image=searchImg3, bg='white',
+                  command=searchTheaters)
+searchBt.pack()
+searchBt.place(x=200,y=10)
+
+
 
 # 영화 검색
 frame2.config(bg='white')
@@ -124,8 +181,7 @@ def search():
 
 
 
-def callback(url):
-    webbrowser.open_new(url)
+
 
 def showInfo():
     indexInfo = movieListbox.curselection()[0]
