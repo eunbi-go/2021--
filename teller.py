@@ -16,8 +16,16 @@ import noti
 
 def replyAptData2(movieNm, user):
     print(user, movieNm)
-    res_list = noti.getData2(movieNm)
-    print(res_list)
+    Alldata = noti.getData2(movieNm)
+    cnt = len(Alldata['items'])
+    strMsg = ' '
+    for i in range(cnt):
+        strMsg = "영화 제목 : " + str(Alldata['items'][i]['title'].strip('</b>').replace('<b>','').replace('</b>',''))
+        strMsg = strMsg + '\n' + "개봉 년도 : " + str(Alldata['items'][i]['pubDate'])
+        strMsg = strMsg + '\n' + "감독 : " + str(Alldata['items'][i]['director'].split('|')[0])
+        strMsg = strMsg + '\n' + "출연 배우 : " + str(Alldata['items'][i]['actor'].replace('|', ', '))
+        strMsg = strMsg + '\n' + "관객 평점 : " + str(Alldata['items'][i]['userRating'])
+        noti.sendMessage( user, strMsg )
 
 # 인자 : 날짜, 유저정보, 지역코드
 # 인자 : 영화 제목
