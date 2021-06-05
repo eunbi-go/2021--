@@ -276,6 +276,9 @@ def sendMail_MovieInfo():
     s.sendmail('nono9910@naver.com', 'geunbi38@gmail.com', msg.as_string())
     s.quit()
 
+def sendTel_MovieInfo():
+    pass
+
 # 정보 보기 버튼
 global comfirmBt
 comfirmBt = PhotoImage(file='conff.png', master=frame2)
@@ -289,6 +292,13 @@ mailImg = PhotoImage(file='mail.png', master=frame2)
 mailBt = Button(frame2, font=('Courier',15), image=mailImg,
                 command=sendMail_MovieInfo, bg='white')
 mailBt.place(x=340,y=30)
+
+# 텔레그램 전송 버튼
+global telImg
+telImg = PhotoImage(file='tel.png', master=frame2)
+TelBt = Button(frame2, font=('Courier',15), image=telImg,
+                command=sendTel_MovieInfo(), bg='white')
+TelBt.place(x=410,y=30)
 
 # 영화 정보 표기
 movieListbox = Listbox(frame2, width=25,height=18, relief='solid', bg='white')
