@@ -354,6 +354,108 @@ labelActors2.pack()
 labelActors2.place(x=300,y=320)
 
 
+# 배우 검색
+frameActor = Frame(mainWnd)
+global photoAc
+photoAc = PhotoImage(file='actor.png', master=frameActor)
+notebook.add(frameActor, image=photoAc)
+frameActor.config(bg='white')
+
+actorNmEt = Entry(frameActor, bd=5)
+actorNmEt.pack()
+actorNmEt.place(x=10,y=10, width=100,height=40)
+
+# 영문명
+Label(frameActor, text='영문명', font=("Courier",15), bg='white').place(x=20,y=100)
+# 성별
+Label(frameActor, text='성별', font=("Courier",15), bg='white').place(x=20,y=130)
+# 영화인 분류명
+Label(frameActor, text='영화인 분류', font=("Courier",15), bg='white').place(x=20,y=160)
+# 필모
+Label(frameActor, text='필모', font=("Courier",15), bg='white').place(x=20,y=190)
+
+# 영문명
+labelNm = Label(frameActor, font=("Courier",15), text=' ', bg='white')
+labelNm.pack()
+labelNm.place(x=200,y=100)
+# 성별
+labelSex = Label(frameActor, font=("Courier",15), text=' ', bg='white')
+labelSex.pack()
+labelSex.place(x=200,y=130)
+# 영화인 분류
+labelSort = Label(frameActor, font=("Courier",15), text=' ', bg='white')
+labelSort.pack()
+labelSort.place(x=200,y=160)
+# 필모
+actorListbox = Listbox(frameActor, width=25,height=12, relief='solid', bg='white')
+actorListbox.pack()
+actorListbox.place(x=0,y=220)
+
+def showActorInfo():
+    dayOfficeURL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/people/searchPeopleList.json?key=edfd0508a0320efa8abbe1eeba097a94&peopleNm="
+    dayOfficeURL += actorNmEt.get()
+    res = requests.get(dayOfficeURL)
+    text = res.text
+    d = json.loads(text)
+    code = ' '
+    for b in d['peopleListResult']['peopleList']:
+        code = b['peopleCd']
+
+    dayOfficeURL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/people/searchPeopleInfo.json?key=edfd0508a0320efa8abbe1eeba097a94&peopleCd="
+    dayOfficeURL += code
+    res = requests.get(dayOfficeURL)
+    text = res.text
+    d = json.loads(text)
+    sex = []
+    movieNm = []
+    for b in d['peopleInfoResult']['peopleInfo']['filmos']:
+        movieNm.append(b['movieNm'])
+
+    actorInfo = d['peopleInfoResult']['peopleInfo']
+
+
+    labelNm.config(text=actorInfo['peopleNmEn'])
+    labelSex.config(text=actorInfo['sex'])
+    labelSort.config(text=actorInfo['repRoleNm'])
+    # 필모
+    actorListbox.delete(0, END)
+    for i in range(len(movieNm)):
+        actorListbox.insert(i, movieNm[i])
+    # self.labelFilmos.config(text=movieNm)
+
+    # 네이버 openAPI 읽어오기
+    client_id = "tvo5aUWG9rwBq1YRMqyJ"
+    client_secret = "40VkT1fuAS"
+    header_parms ={"X-Naver-Client-Id":client_id,"X-Naver-Client-Secret":client_secret}
+    search_word = actorNmEt.get() #검색어
+    encode_type = 'json' #출력 방식 json 또는 xml
+    max_display = 3 #출력 뉴스 수
+    sort = 'sim' #결과값의 정렬기준 시간순 date, 관련도 순 sim
+    start = 1 # 출력 위치
+
+    url = f"https://openapi.naver.com/v1/search/news.{encode_type}?query={search_word}&display={str(int(max_display))}&sort={sort}"
+    res=requests.get(url,headers=header_parms)
+    datas = res.json()
+    links = datas['items']
+    actorlink = []
+    for i in links:
+        actorlink.append(i['link'])
+    for i in range(max_display):
+        string = '관련뉴스 ' + str(i+1)
+        actorlinkL = Label(frameActor, text=string, cursor='hand2', bg='white')
+        actorlinkL.pack()
+        actorlinkL.place(x=400,y=200 + i * 30)
+        actorlinkL.bind("<Button-1>", lambda e: callback(actorlink[i]))
+    pass
+
+# 정보 보기 버튼
+infoBt = Button(frameActor, font=('Courier',15), command=showActorInfo,
+                image=searchImg2, bg='white')
+infoBt.place(x=130,y=10)
+
+
+
+
 class BoxOfficeRank:
     def __init__(self, frame):
         self.dayRankIdx = 0
