@@ -391,6 +391,10 @@ actorListbox = Listbox(frameActor, width=25,height=12, relief='solid', bg='white
 actorListbox.pack()
 actorListbox.place(x=0,y=220)
 
+actorInfo = []
+actorMovieNm = []
+actorEgNm = []
+actorSex = []
 def showActorInfo():
     dayOfficeURL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/people/searchPeopleList.json?key=edfd0508a0320efa8abbe1eeba097a94&peopleNm="
     dayOfficeURL += actorNmEt.get()
@@ -407,20 +411,20 @@ def showActorInfo():
     text = res.text
     d = json.loads(text)
     sex = []
-    movieNm = []
     for b in d['peopleInfoResult']['peopleInfo']['filmos']:
-        movieNm.append(b['movieNm'])
+        actorMovieNm.append(b['movieNm'])
 
     actorInfo = d['peopleInfoResult']['peopleInfo']
 
-
+    actorEgNm.append(actorInfo['sex'])
+    actorSex.append(actorInfo['sex'])
     labelNm.config(text=actorInfo['peopleNmEn'])
     labelSex.config(text=actorInfo['sex'])
     labelSort.config(text=actorInfo['repRoleNm'])
     # 필모
     actorListbox.delete(0, END)
-    for i in range(len(movieNm)):
-        actorListbox.insert(i, movieNm[i])
+    for i in range(len(actorMovieNm)):
+        actorListbox.insert(i, actorMovieNm[i])
     # self.labelFilmos.config(text=movieNm)
 
     # 네이버 openAPI 읽어오기
@@ -448,11 +452,31 @@ def showActorInfo():
         actorlinkL.bind("<Button-1>", lambda e: callback(actorlink[i]))
     pass
 
+def sendMail_ActorInfo():
+    s = smtplib.SMTP('smtp.gmail.com', 587)
+    s.starttls()
+    s.login('geunbi38@gmail.com', 'lidmnbysnqfzlfcp')
+    strName = actorNmEt.get()
+    strMain = '배우 정보 알려드립니다 - ' + strName
+    strMsg = '이름 : ' + strName + '(' + str(actorEgNm[0]) + ')' + '\n' + "성별 : " + str(actorSex[0]) + '\n'
+    strMsg = strMsg + "=======참여 작품=======" + '\n'
+    for i in actorMovieNm:
+        strMsg += str(i) + '\n'
+
+    msg = MIMEText(strMsg)
+    msg['Subject'] = strMain
+    s.sendmail('nono9910@naver.com', 'geunbi38@gmail.com', msg.as_string())
+    s.quit()
+
 # 정보 보기 버튼
 infoBt = Button(frameActor, font=('Courier',15), command=showActorInfo,
                 image=searchImg2, bg='white')
 infoBt.place(x=130,y=10)
 
+# 지메일 전송 버튼
+actorMailBt = Button(frameActor, font=('Courier',15), image=mailImg,
+                command=sendMail_ActorInfo, bg='white')
+actorMailBt.place(x=340,y=30)
 
 
 
