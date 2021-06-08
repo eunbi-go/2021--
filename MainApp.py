@@ -530,6 +530,10 @@ class BoxOfficeRank:
         graphBt.pack()
         graphBt.place(x=250,y=10)
 
+        rankingMailBt = Button(self.BoxOfficeWnd, font=('Courier',15), image=mailImg,
+                             command=self.sendRankingInfo, bg='white')
+        rankingMailBt.place(x=320,y=10)
+
         # 영화 제목
         self.labelNm1 = Label(self.BoxOfficeWnd, font=("Courier",15), text=' ', bg='white')
         self.labelNm1.pack()
@@ -583,6 +587,20 @@ class BoxOfficeRank:
 
         self.BoxOfficeWnd.mainloop()
 
+    def sendRankingInfo(self):
+        s = smtplib.SMTP('smtp.gmail.com', 587)
+        s.starttls()
+        s.login('geunbi38@gmail.com', 'lidmnbysnqfzlfcp')
+        strMain = '박스오피스<일간>랭킹 알려드립니다 - ' + str(self.strDate)
+        strMsg = ' '
+        for i in range(10):
+            strMsg += str(i+1) + "위: " + str(self.movieNm[i]) + ", 개봉일: " + str(self.openingDt[i]) + '\n'
+        msg = MIMEText(strMsg)
+        msg['Subject'] = strMain
+        s.sendmail('nono9910@naver.com', 'geunbi38@gmail.com', msg.as_string())
+        s.quit()
+        pass
+
     def BoxOfficeGraph(self):
         self.Graph = Tk()
         self.currGrp = 0
@@ -635,24 +653,24 @@ class BoxOfficeRank:
         self.ShowRank()
 
     def ShowRank(self):
-        strDate = yearEt.get()
+        self.strDate = yearEt.get()
         if int(monthEt.get()) < 10:
-            strDate = strDate + str(0) + monthEt.get()
+            self.strDate = self.strDate + str(0) + monthEt.get()
         else:
-            strDate += monthEt.get()
+            self.strDate += monthEt.get()
         if int(dayEt.get()) < 10:
-            strDate = strDate + str(0) + dayEt.get()
+            self.strDate = self.strDate + str(0) + dayEt.get()
         else:
-            strDate += dayEt.get()
+            self.strDate += dayEt.get()
 
         dayOfficeURL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=edfd0508a0320efa8abbe1eeba097a94&targetDt="
 
-        dayOfficeURL += strDate
+        dayOfficeURL += self.strDate
         res = requests.get(dayOfficeURL)
         text = res.text
         d = json.loads(text)
-        movieNm = []
-        openingDt = []
+        self.movieNm = []
+        self.openingDt = []
         self.rank = []
         self.iRank = []
         self.salesAcc = []
@@ -664,8 +682,8 @@ class BoxOfficeRank:
         self.showCnt = []
         self.iShowCnt = []
         for b in d['boxOfficeResult']['dailyBoxOfficeList']:
-            movieNm.append(b['movieNm'])
-            openingDt.append(b['openDt'])
+            self.movieNm.append(b['movieNm'])
+            self.openingDt.append(b['openDt'])
             self.rank.append(b['rank'])
             self.iRank.append(int(b['rank']))
             self.salesAcc.append(b['salesAcc'])
@@ -692,19 +710,19 @@ class BoxOfficeRank:
         #if len(string) > 10:
         #begStr = string[0:5]
         #midStr = string[5:]
-        self.labelNm1.config(text=movieNm[self.dayRankIdx])
-        self.labelNm2.config(text=movieNm[self.dayRankIdx+1])
-        self.labelNm3.config(text=movieNm[self.dayRankIdx+2])
+        self.labelNm1.config(text=str(self.movieNm[self.dayRankIdx]))
+        self.labelNm2.config(text=str(self.movieNm[self.dayRankIdx+1]))
+        self.labelNm3.config(text=str(self.movieNm[self.dayRankIdx+2]))
 
 
         # 영화 개봉일
         firstOpenDt = Label(self.BoxOfficeWnd, text='영화 제목/개봉일', font=("Courier",17), bg='white')
         firstOpenDt.place(x=135, y=80)
-        firstOpenDt = Label(self.BoxOfficeWnd, text=openingDt[self.dayRankIdx], font=("Courier",15), bg='white')
+        firstOpenDt = Label(self.BoxOfficeWnd, text=str(self.openingDt[self.dayRankIdx]), font=("Courier",15), bg='white')
         firstOpenDt.place(x=150, y=180)
-        secondOpenDt = Label(self.BoxOfficeWnd, text=openingDt[self.dayRankIdx+1], font=("Courier",15), bg='white')
+        secondOpenDt = Label(self.BoxOfficeWnd, text=str(self.openingDt[self.dayRankIdx+1]), font=("Courier",15), bg='white')
         secondOpenDt.place(x=150, y=280)
-        thirdOpenDt = Label(self.BoxOfficeWnd, text=openingDt[self.dayRankIdx+2], font=("Courier",15), bg='white')
+        thirdOpenDt = Label(self.BoxOfficeWnd, text=str(self.openingDt[self.dayRankIdx+2]), font=("Courier",15), bg='white')
         thirdOpenDt.place(x=150, y=380)
 
         # 누적 매출액
