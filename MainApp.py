@@ -789,7 +789,7 @@ class BoxOfficeRank:
 
         # 영화 개봉일
         firstOpenDt = Label(self.BoxOfficeWnd, text='영화 제목/개봉일', font=("Courier",17), bg='white')
-        firstOpenDt.place(x=135, y=80)
+        firstOpenDt.place(x=80, y=80)
         firstOpenDt = Label(self.BoxOfficeWnd, text=str(self.openingDt[self.dayRankIdx]), font=("Courier",15), bg='white')
         firstOpenDt.place(x=150, y=180)
         secondOpenDt = Label(self.BoxOfficeWnd, text=str(self.openingDt[self.dayRankIdx+1]), font=("Courier",15), bg='white')
