@@ -722,15 +722,61 @@ class BoxOfficeRank:
             self.iShowCnt.append((int)(b['showCnt']))
         NmFont = font.Font(mainWnd, size=30, weight='bold', family='Consolas')
 
+        # 영화 이미지 가져오기
+        self.image = []
+        client_id = "tvo5aUWG9rwBq1YRMqyJ"
+        client_secret = "40VkT1fuAS"
+        header_parms ={"X-Naver-Client-Id":client_id,"X-Naver-Client-Secret":client_secret}
+        for i in range(10):
+            strSearch = self.movieNm[i]
+            url = f"https://openapi.naver.com/v1/search/movie.json?query={strSearch}"
+            res=requests.get(url,headers=header_parms)
+            Alldata = res.json()
+            movieCnt = len(Alldata['items'])
+
+            #for j in range(movieCnt):
+            self.image.append(Alldata['items'][0]['image'])
+
+
         # 순위
+        with urllib.request.urlopen(self.image[self.dayRankIdx]) as u:
+            raw_data = u.read()
+        im = Image.open(BytesIO(raw_data))
+        im = im.resize((80,80), Image.ANTIALIAS)
+        global im1
+        im1 = ImageTk.PhotoImage(im, master=self.BoxOfficeWnd)
+
+        with urllib.request.urlopen(self.image[self.dayRankIdx+1]) as u:
+            raw_data2 = u.read()
+        imm = Image.open(BytesIO(raw_data2))
+        imm = imm.resize((80,80), Image.ANTIALIAS)
+        global im12
+        im12 = ImageTk.PhotoImage(imm, master=self.BoxOfficeWnd)
+
+        with urllib.request.urlopen(self.image[self.dayRankIdx+2]) as u:
+            raw_data3 = u.read()
+        immm = Image.open(BytesIO(raw_data3))
+        immm = immm.resize((80,80), Image.ANTIALIAS)
+        global im13
+        im13 = ImageTk.PhotoImage(immm, master=self.BoxOfficeWnd)
+
+
         firstNameL = Label(self.BoxOfficeWnd, font=("Courier",20), text='순위', bg='white')
-        firstNameL.place(x=50, y=80)
+        firstNameL.place(x=5, y=80)
         firstNameL = Label(self.BoxOfficeWnd, font=("Courier",20), text=self.rank[self.dayRankIdx], bg='white')
-        firstNameL.place(x=60, y=160)
+        firstNameL.place(x=5, y=160)
         secondNameL = Label(self.BoxOfficeWnd, font=("Courier",20), text=self.rank[self.dayRankIdx+1], bg='white')
-        secondNameL.place(x=60, y=260)
+        secondNameL.place(x=5, y=260)
         thirdNameL = Label(self.BoxOfficeWnd, font=("Courier",20), text=self.rank[self.dayRankIdx+2], bg='white')
-        thirdNameL.place(x=60,y=360)
+        thirdNameL.place(x=5,y=360)
+
+        # 영화 이미지
+        firstNameL = Label(self.BoxOfficeWnd, image=im1)
+        firstNameL.place(x=58, y=130)
+        secondNameL = Label(self.BoxOfficeWnd, image=im12)
+        secondNameL.place(x=58, y=230)
+        thirdNameL = Label(self.BoxOfficeWnd, image=im13)
+        thirdNameL.place(x=58,y=330)
 
         # 영화 이름
         #if len(string) > 10:
