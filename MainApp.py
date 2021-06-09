@@ -320,13 +320,6 @@ mailBt = Button(frame2, font=('Courier',15), image=mailImg,
                 command=sendMail_MovieInfo, bg='white')
 mailBt.place(x=340,y=30)
 
-# 텔레그램 전송 버튼
-global telImg
-telImg = PhotoImage(file='tel.png', master=frame2)
-TelBt = Button(frame2, font=('Courier',15), image=telImg,
-                command=sendTel_MovieInfo(), bg='white')
-TelBt.place(x=410,y=30)
-
 # 영화 정보 표기
 movieListbox = Listbox(frame2, width=25,height=18, relief='solid', bg='white')
 movieListbox.pack()
@@ -475,14 +468,28 @@ def showActorInfo():
     datas = res.json()
     links = datas['items']
     actorlink = []
+    actorTitle = []
     for i in links:
         actorlink.append(i['link'])
-    for i in range(max_display):
-        string = '관련뉴스 ' + str(i+1)
-        actorlinkL = Label(frameActor, text=string, cursor='hand2', bg='white')
-        actorlinkL.pack()
-        actorlinkL.place(x=400,y=200 + i * 30)
-        actorlinkL.bind("<Button-1>", lambda e: callback(actorlink[i]))
+        actorTitle.append(i['title'].strip('</b>').replace('<b>','').replace('</b>',''))
+
+    string = actorTitle[0]
+    actorlinkL = Label(frameActor, text=string, cursor='hand2', bg='white')
+    actorlinkL.pack()
+    actorlinkL.place(x=400,y=200 + 0 * 30)
+    actorlinkL.bind("<Button-1>", lambda e: callback(actorlink[0]))
+
+    string = actorTitle[1]
+    actorlinkL = Label(frameActor, text=string, cursor='hand2', bg='white')
+    actorlinkL.pack()
+    actorlinkL.place(x=400,y=200 + 1 * 30)
+    actorlinkL.bind("<Button-1>", lambda e: callback(actorlink[1]))
+
+    string = actorTitle[2]
+    actorlinkL = Label(frameActor, text=string, cursor='hand2', bg='white')
+    actorlinkL.pack()
+    actorlinkL.place(x=400,y=200 + 2 * 30)
+    actorlinkL.bind("<Button-1>", lambda e: callback(actorlink[2]))
 
     # 배우 이미지
     url2 = f"https://openapi.naver.com/v1/search/image.{encode_type}?query={search_word}&display={str(int(max_display))}&sort={sort}"
@@ -502,7 +509,7 @@ def showActorInfo():
 
     imgL = Label(frameActor,height=150,width=150, bg='white')
     imgL.pack()
-    imgL.place(x=550,y=100)
+    imgL.place(x=400,y=10)
     imgL.config(image=image2)
 
     # 배우 관련 웹문서
@@ -522,14 +529,14 @@ def showActorInfo():
         string = textTitle[0]
         actorlinkL = Label(frameActor, text=string, cursor='hand2', bg='white')
         actorlinkL.pack()
-        actorlinkL.place(x=600,y=200 + 0 * 30)
+        actorlinkL.place(x=600,y=50 + 0 * 30)
         strLink = textLink[0]
         actorlinkL.bind("<Button-1>", lambda e: callback(textLink[0]))
     if textCnt > 1:
         string = textTitle[1]
         actorlinkL = Label(frameActor, text=string, cursor='hand2', bg='white')
         actorlinkL.pack()
-        actorlinkL.place(x=600,y=200 + 1 * 30)
+        actorlinkL.place(x=600,y=50 + 1 * 30)
         strLink = textLink[1]
         actorlinkL.bind("<Button-1>", lambda e: callback(textLink[1]))
     pass
@@ -558,7 +565,7 @@ infoBt.place(x=130,y=10)
 # 지메일 전송 버튼
 actorMailBt = Button(frameActor, font=('Courier',15), image=mailImg,
                 command=sendMail_ActorInfo, bg='white')
-actorMailBt.place(x=340,y=30)
+actorMailBt.place(x=200,y=10)
 
 
 
