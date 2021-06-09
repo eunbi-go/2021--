@@ -75,6 +75,10 @@ theaterListBox = Listbox(framePos, width=30,height=15)
 theaterListBox.pack()
 theaterListBox.place(x=10,y=120)
 
+# 영화관 도로명주소
+theaterL = Label(framePos, bg='white', font=('Courier', 13))
+theaterL.pack()
+theaterL.place(x=10,y=370)
 
 
 def searchTheaters():
@@ -87,9 +91,11 @@ def searchTheaters():
     global theaters
     global latitude # 위도
     global hardness # 경도
+    global address
     theaters = []
     latitude = []
     hardness = []
+    address = []
 
     cnt = 0
     theaterListBox.delete(0, END)
@@ -97,15 +103,17 @@ def searchTheaters():
         nm = str(item.find('bizplc_nm').string)
         lati = item.find('refine_wgs84_lat').string
         hard = item.find('refine_wgs84_logt').string
+        ad = item.find('refine_roadnm_addr').string
 
         #theaters.append(nm)
         theaterListBox.insert(cnt, nm)
         latitude.append(lati)
         hardness.append(hard)
+        address.append(ad)
 
         cnt += 1
-    print(latitude)
-    print(hardness)
+
+
 
 def new():
     browser.Reload()
@@ -129,6 +137,7 @@ def show(frame):
 
 def confirmTheather():
     theatherIndex = theaterListBox.curselection()[0]
+    theaterL.config(text=address[theatherIndex])
     global m
     m = folium.Map(location=[latitude[theatherIndex], hardness[theatherIndex]], zoom_start=13)
     folium.Marker([latitude[theatherIndex], hardness[theatherIndex]], popup='영화관').add_to(m)
