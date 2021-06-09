@@ -11,6 +11,10 @@ import smtplib
 from email.mime.text import  MIMEText
 from tkinter import ttk
 from bs4 import BeautifulSoup
+import threading
+import sys
+import folium
+from cefpython3 import cefpython as cef
 
 from SearchActor import *
 
@@ -44,6 +48,10 @@ global photo3
 photo3 = PhotoImage(file='pos.png', master=framePos)
 notebook.add(framePos, image=photo3)
 
+frameMap = Frame(framePos, width=400, height=400)
+frameMap.pack(side='right')
+
+
 framePos.config(bg='white')
 
 Label(framePos, text='경기도', font=("Courier",15), bg='white').place(x=10,y=10)
@@ -57,6 +65,8 @@ combo.current(0)
 combo.pack()
 combo.place(x=100,y=40)
 
+global latitude # 위도
+global hardness # 경도
 
 def searchTheaters():
     strPos = strLocation.get()
@@ -68,10 +78,25 @@ def searchTheaters():
     data = soup.find_all('row')
     global theaters
     theaters = []
+
+
+    latitude = []
+    hardness = []
+
     cnt = 0
     for item in data:
         nm = item.find('bizplc_nm').string
+
+        lati = item.find('refine_wgs84_lat').string
+        hard = item.find('refine_wgs84_logt').string
+
         theaters.append(nm)
+        latitude.append(lati)
+        hardness.append(hard)
+
+        print(nm)
+        print(lati)
+        print(hard)
 
         linkL = Label(framePos, text=nm, cursor='hand2')
         linkL.pack()
@@ -79,6 +104,36 @@ def searchTheaters():
         linkL.bind("<Button-1>", lambda e: callback(naverlink[indexInfo]))
 
         cnt += 1
+
+def show(frame):
+    sys.excepthook = cef.ExceptHook
+    window_info = cef.WindowInfo(frame.winfo_id())
+    window_info.SetAsChild(frame.winfo_id(), [0,0,800,600])
+    cef.Initialize()
+    browser = cef.CreateBrowserSync(window_info, url='file:///map.html')
+    cef.MessageLoop()
+
+def showMap():
+    global lat
+    m = folium.Map(location=[37.3402849, 126.7313189], zoom_start=13)
+    folium.Marker([37.3402849, 126.7313189], popup='영화관').add_to(m)
+    m.save('map.html')
+
+    thread = threading.Thread(target=show, args=(frameMap,))
+    thread.daemon = True
+    thread.start()
+
+
+global searchImg2
+searchImg2 = PhotoImage(file='search.png')
+searchBt = Button(framePos, font=('Courier',15), image=searchImg2, bg='white',
+                  command=showMap)
+searchBt.pack()
+searchBt.place(x=300,y=30)
+
+
+
+
 
 
 # 영화관 찾기
@@ -305,8 +360,7 @@ movieListbox = Listbox(frame2, width=25,height=18, relief='solid', bg='white')
 movieListbox.pack()
 movieListbox.place(x=10,y=90)
 
-global searchImg2
-searchImg2 = PhotoImage(file='search.png')
+
 searchBt = Button(frame2, font=('Courier',15), image=searchImg2, bg='white',
                   command=search)
 searchBt.pack()
