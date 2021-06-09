@@ -15,6 +15,7 @@ import threading
 import sys
 import folium
 from cefpython3 import cefpython as cef
+import imp
 
 from SearchActor import *
 
@@ -22,6 +23,9 @@ mainWnd = Tk()
 mainWnd.geometry("900x600")
 mainWnd.title("영화 정보 검색 앱")
 mainWnd.configure(bg='black')
+
+
+
 
 Font = font.Font(mainWnd, size=20, weight='bold', family='Consolas')
 
@@ -52,6 +56,7 @@ frameMap = Frame(framePos, width=400, height=400)
 frameMap.pack(side='right')
 
 
+
 framePos.config(bg='white')
 
 Label(framePos, text='경기도', font=("Courier",15), bg='white').place(x=10,y=10)
@@ -65,74 +70,87 @@ combo.current(0)
 combo.pack()
 combo.place(x=100,y=40)
 
-global latitude # 위도
-global hardness # 경도
+# 영화관 리스트 박스
+theaterListBox = Listbox(framePos, width=30,height=15)
+theaterListBox.pack()
+theaterListBox.place(x=10,y=120)
+
+
 
 def searchTheaters():
     strPos = strLocation.get()
     url = "https://openapi.gg.go.kr/MovieTheater?SIGUN_NM="
     url += strPos
-
     res = requests.get(url)
     soup = BeautifulSoup(res.content, 'html.parser')
     data = soup.find_all('row')
     global theaters
+    global latitude # 위도
+    global hardness # 경도
     theaters = []
-
-
     latitude = []
     hardness = []
 
     cnt = 0
+    theaterListBox.delete(0, END)
     for item in data:
-        nm = item.find('bizplc_nm').string
-
+        nm = str(item.find('bizplc_nm').string)
         lati = item.find('refine_wgs84_lat').string
         hard = item.find('refine_wgs84_logt').string
 
-        theaters.append(nm)
+        #theaters.append(nm)
+        theaterListBox.insert(cnt, nm)
         latitude.append(lati)
         hardness.append(hard)
 
-        print(nm)
-        print(lati)
-        print(hard)
-
-        linkL = Label(framePos, text=nm, cursor='hand2')
-        linkL.pack()
-        linkL.place(x=10,y=200+cnt*50)
-        linkL.bind("<Button-1>", lambda e: callback(naverlink[indexInfo]))
-
         cnt += 1
+    print(latitude)
+    print(hardness)
+
+def new():
+    browser.Reload()
+    m.save('map.html')
+
+global ch
+ch = True
 
 def show(frame):
+    global ch
+    ch = False
     sys.excepthook = cef.ExceptHook
     window_info = cef.WindowInfo(frame.winfo_id())
     window_info.SetAsChild(frame.winfo_id(), [0,0,800,600])
     cef.Initialize()
+    global browser
     browser = cef.CreateBrowserSync(window_info, url='file:///map.html')
     cef.MessageLoop()
 
-def showMap():
-    global lat
-    m = folium.Map(location=[37.3402849, 126.7313189], zoom_start=13)
-    folium.Marker([37.3402849, 126.7313189], popup='영화관').add_to(m)
-    m.save('map.html')
 
-    thread = threading.Thread(target=show, args=(frameMap,))
-    thread.daemon = True
-    thread.start()
+
+def confirmTheather():
+    theatherIndex = theaterListBox.curselection()[0]
+    global m
+    m = folium.Map(location=[latitude[theatherIndex], hardness[theatherIndex]], zoom_start=13)
+    folium.Marker([latitude[theatherIndex], hardness[theatherIndex]], popup='영화관').add_to(m)
+    if ch == False:
+        new()
+    else:
+        m.save('map.html')
+        thread = threading.Thread(target=show, args=(frameMap,))
+        thread.daemon = True
+        thread.start()
+
+
 
 
 global searchImg2
 searchImg2 = PhotoImage(file='search.png')
-searchBt = Button(framePos, font=('Courier',15), image=searchImg2, bg='white',
-                  command=showMap)
+global img
+img = PhotoImage(file='conff.png')
+searchBt = Button(framePos, font=('Courier',15), image=img, bg='white',
+                  command=confirmTheather)
 searchBt.pack()
-searchBt.place(x=300,y=30)
-
-
-
+searchBt.place(x=270,y=10)
 
 
 
@@ -257,7 +275,7 @@ def showInfo():
     # 네이버로 열기
     linkL = Label(frame2, text='네이버로 열기', cursor='hand2')
     linkL.pack()
-    linkL.place(x=320,y=180)
+    linkL.place(x=650,y=100)
     linkL.bind("<Button-1>", lambda e: callback(naverlink[indexInfo]))
 
     # 관련 뉴스 - 네이버 openAPI 읽어오기
@@ -275,13 +293,17 @@ def showInfo():
     datas = res.json()
     links = datas['items']
     link = []
+    newsTitle = []
     for i in links:
         link.append(i['link'])
+        newsTitle.append(i['title'].strip('</b>').replace('<b>','').replace('</b>',''))
     for i in range(max_display):
-        string = '관련뉴스 ' + str(i+1)
+        #string = '관련뉴스 ' + str(i+1)
+        string = newsTitle[i]
+        #string.strip('</b>').replace('<b>','').replace('</b>','')
         linkL = Label(frame2, text=string, cursor='hand2')
         linkL.pack()
-        linkL.place(x=410,y=120 + i * 30)
+        linkL.place(x=410,y=300 + i * 30)
         linkL.bind("<Button-1>", lambda e: callback(link[i]))
 
 
@@ -314,9 +336,9 @@ def showInfo():
     global image2
     image2=ImageTk.PhotoImage(im, master=frame2)
 
-    imgL = Label(frame2,height=100,width=100)
+    imgL = Label(frame2,height=150,width=150, bg='white')
     imgL.pack()
-    imgL.place(x=200,y=100)
+    imgL.place(x=500,y=100)
     imgL.config(image=image2)
 
 
@@ -368,44 +390,44 @@ searchBt.place(x=200,y=30)
 
 # 개봉일
 dateL = Label(frame2, text='개봉년도', font=("Courier",15), bg='white')
-dateL.place(x=200,y=200)
+dateL.place(x=200,y=100)
 # 평점
 ratingL = Label(frame2, text='평점', font=("Courier",15), bg='white')
-ratingL.place(x=200,y=230)
+ratingL.place(x=200,y=130)
 # 장르
 genreL = Label(frame2, text='장르', font=('Courier',15), bg='white')
-genreL.place(x=400,y=230)
+genreL.place(x=400,y=130)
 # 감독
 directorL = Label(frame2, text='감독', font=("Courier",15), bg='white')
-directorL.place(x=200,y=260)
+directorL.place(x=200,y=160)
 # 출연배우
 actorsL = Label(frame2, text='출연배우', font=("Courier",15), bg='white')
-actorsL.place(x=200,y=290)
+actorsL.place(x=200,y=190)
 
 # 개봉일
 labelDate = Label(frame2, font=("Courier",15), text=' ', bg='white')
 labelDate.pack()
-labelDate.place(x=300,y=200)
+labelDate.place(x=300,y=100)
 # 평점
 labelRate = Label(frame2, font=("Courier",15), text=' ', bg='white')
 labelRate.pack()
-labelRate.place(x=300,y=230)
+labelRate.place(x=300,y=130)
 # 장르
 labelGenre = Label(frame2, font=('Courier',10), text=' ', bg='white')
 labelGenre.pack()
-labelGenre.place(x=450,y=230)
+labelGenre.place(x=450,y=130)
 # 감독
 labelDirector = Label(frame2, font=("Courier",15), text=' ', bg='white')
 labelDirector.pack()
-labelDirector.place(x=300,y=260)
+labelDirector.place(x=300,y=160)
 # 출연배우
 labelActors = Label(frame2, font=("Courier",10), text=' ', bg='white')
 labelActors.pack()
-labelActors.place(x=300,y=290)
+labelActors.place(x=300,y=190)
 
-labelActors2 = Label(frame2, font=("Courier",10), text=' ', bg='white')
-labelActors2.pack()
-labelActors2.place(x=300,y=320)
+#labelActors2 = Label(frame2, font=("Courier",10), text=' ', bg='white')
+#labelActors2.pack()
+#labelActors2.place(x=300,y=320)
 
 
 # 배우 검색
