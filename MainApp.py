@@ -422,6 +422,11 @@ actorMovieNm = []
 actorEgNm = []
 actorSex = []
 def showActorInfo():
+    actorInfo = []
+    actorMovieNm = []
+    actorEgNm = []
+    actorSex = []
+
     dayOfficeURL = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/people/searchPeopleList.json?key=edfd0508a0320efa8abbe1eeba097a94&peopleNm="
     dayOfficeURL += actorNmEt.get()
     res = requests.get(dayOfficeURL)
@@ -447,6 +452,8 @@ def showActorInfo():
     labelNm.config(text=actorInfo['peopleNmEn'])
     labelSex.config(text=actorInfo['sex'])
     labelSort.config(text=actorInfo['repRoleNm'])
+
+
     # 필모
     actorListbox.delete(0, END)
     for i in range(len(actorMovieNm)):
@@ -476,6 +483,10 @@ def showActorInfo():
         actorlinkL.pack()
         actorlinkL.place(x=400,y=200 + i * 30)
         actorlinkL.bind("<Button-1>", lambda e: callback(actorlink[i]))
+
+    # 배우 이미지
+    # 네이버 openAPI 읽어오기
+
     pass
 
 def sendMail_ActorInfo():
