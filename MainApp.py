@@ -170,48 +170,6 @@ movieNmEt = Entry(frame2, bd=5, bg='white')
 movieNmEt.pack()
 movieNmEt.place(x=15,y=40, width=100,height=40)
 
-class SearchMovie:
-    def __init__(self):
-        self.movieCnt = 0
-
-    def search(self):
-        self.strSearch = movieNmEt.get()
-        movieListbox.delete(0, END)
-
-        # 네이버 openAPI 읽어오기
-        client_id = "tvo5aUWG9rwBq1YRMqyJ"
-        client_secret = "40VkT1fuAS"
-        header_parms ={"X-Naver-Client-Id":client_id,"X-Naver-Client-Secret":client_secret}
-        url = f"https://openapi.naver.com/v1/search/movie.json?query={self.strSearch}"
-        res=requests.get(url,headers=header_parms)
-
-        self.Alldata = res.json()
-        self.movieCnt = len(self.Alldata['items'])
-        self.title = []
-        self.naverlink = []
-        self.image = []
-        self.date = []
-        self.director = []
-        self.actors = []
-        self.rating = []
-
-        for i in range(self.movieCnt):
-            self.title.append(self.Alldata['items'][i]['title'].strip('</b>').replace('<b>','').replace('</b>',''))
-            self.naverlink.append(self.Alldata['items'][i]['link'])
-            self.image.append(self.Alldata['items'][i]['image'])
-            self.date.append(self.Alldata['items'][i]['pubDate'])
-            self.director.append(self.Alldata['items'][i]['director'].split('|')[0])
-            self.actors.append(self.Alldata['items'][i]['actor'].replace('|', ', '))
-            self.rating.append(float(self.Alldata['items'][i]['userRating']))
-        self.showTitle()
-
-    def showTitle(self):
-        for i in range(self.movieCnt):
-            movieListbox.insert(i, self.title[i])
-
-
-
-
 def search():
     strSearch = movieNmEt.get()
     movieListbox.delete(0, END)
@@ -252,24 +210,16 @@ def search():
     for i in range(movieCnt):
         movieListbox.insert(i, title[i])
 
-
-
-
-
 def showInfo():
     indexInfo = movieListbox.curselection()[0]
     labelDate.config(text=date[indexInfo])
-    directorL.config(text=director[indexInfo])
-    strLen = len(actors[indexInfo])
-    if strLen > 17:
-        begStr = actors[indexInfo][0:17]
-        midStr = actors[indexInfo][17:]
-        actorsL.config(text=begStr)
-        #self.labelActors2.config(text=midStr)
-    else:
-        actorsL.config(text=actors[indexInfo])
-        #self.labelActors2.config(text=' ')
+    labelDirector.config(text=director[indexInfo])
 
+    strActors = actors[indexInfo].split(', ')
+    newStr = ''
+    for i in range(len(strActors)):
+        newStr += strActors[i] + '\n' + '\n'
+    labelActors.config(text=newStr)
     labelRate.config(text=rating[indexInfo])
 
     # 네이버로 열기
@@ -338,7 +288,7 @@ def showInfo():
 
     imgL = Label(frame2,height=150,width=150, bg='white')
     imgL.pack()
-    imgL.place(x=500,y=100)
+    imgL.place(x=550,y=100)
     imgL.config(image=image2)
 
 
@@ -396,13 +346,13 @@ ratingL = Label(frame2, text='평점', font=("Courier",15), bg='white')
 ratingL.place(x=200,y=130)
 # 장르
 genreL = Label(frame2, text='장르', font=('Courier',15), bg='white')
-genreL.place(x=400,y=130)
+genreL.place(x=400,y=100)
 # 감독
 directorL = Label(frame2, text='감독', font=("Courier",15), bg='white')
 directorL.place(x=200,y=160)
 # 출연배우
 actorsL = Label(frame2, text='출연배우', font=("Courier",15), bg='white')
-actorsL.place(x=200,y=190)
+actorsL.place(x=200,y=210)
 
 # 개봉일
 labelDate = Label(frame2, font=("Courier",15), text=' ', bg='white')
@@ -413,17 +363,17 @@ labelRate = Label(frame2, font=("Courier",15), text=' ', bg='white')
 labelRate.pack()
 labelRate.place(x=300,y=130)
 # 장르
-labelGenre = Label(frame2, font=('Courier',10), text=' ', bg='white')
+labelGenre = Label(frame2, font=('Courier',15), text=' ', bg='white')
 labelGenre.pack()
-labelGenre.place(x=450,y=130)
+labelGenre.place(x=400,y=130)
 # 감독
 labelDirector = Label(frame2, font=("Courier",15), text=' ', bg='white')
 labelDirector.pack()
 labelDirector.place(x=300,y=160)
 # 출연배우
-labelActors = Label(frame2, font=("Courier",10), text=' ', bg='white')
+labelActors = Label(frame2, font=("Courier",15), text=' ', bg='white')
 labelActors.pack()
-labelActors.place(x=300,y=190)
+labelActors.place(x=300,y=210)
 
 #labelActors2 = Label(frame2, font=("Courier",10), text=' ', bg='white')
 #labelActors2.pack()
