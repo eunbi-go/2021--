@@ -505,9 +505,33 @@ def showActorInfo():
     imgL.place(x=550,y=100)
     imgL.config(image=image2)
 
-    # 배우 웹문서
+    # 배우 관련 웹문서
+    url2 = f"https://openapi.naver.com/v1/search/webkr.{encode_type}?query={search_word}&display={str(int(max_display))}&sort={sort}"
+    res2=requests.get(url2,headers=header_parms)
+    datas2 = res2.json()
+    links2 = datas2['items']
+    textLink = []
+    textTitle = []
+    strDes = " "
+    for i in links2:
+        textTitle.append(i['title'].strip('</b>').replace('<b>','').replace('</b>',''))
+        textLink.append(i['link'])
+    textCnt = len(textLink)
 
-
+    if textCnt > 0:
+        string = textTitle[0]
+        actorlinkL = Label(frameActor, text=string, cursor='hand2', bg='white')
+        actorlinkL.pack()
+        actorlinkL.place(x=600,y=200 + 0 * 30)
+        strLink = textLink[0]
+        actorlinkL.bind("<Button-1>", lambda e: callback(textLink[0]))
+    if textCnt > 1:
+        string = textTitle[1]
+        actorlinkL = Label(frameActor, text=string, cursor='hand2', bg='white')
+        actorlinkL.pack()
+        actorlinkL.place(x=600,y=200 + 1 * 30)
+        strLink = textLink[1]
+        actorlinkL.bind("<Button-1>", lambda e: callback(textLink[1]))
     pass
 
 def sendMail_ActorInfo():
