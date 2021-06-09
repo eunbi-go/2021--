@@ -485,7 +485,28 @@ def showActorInfo():
         actorlinkL.bind("<Button-1>", lambda e: callback(actorlink[i]))
 
     # 배우 이미지
-    # 네이버 openAPI 읽어오기
+    url2 = f"https://openapi.naver.com/v1/search/image.{encode_type}?query={search_word}&display={str(int(max_display))}&sort={sort}"
+    res2=requests.get(url2,headers=header_parms)
+    datas2 = res2.json()
+    links2 = datas2['items']
+    imgLink = []
+    for i in links2:
+        imgLink.append(i['thumbnail'])
+
+    imgUrl = imgLink[0]
+    with urllib.request.urlopen(imgUrl) as u:
+        raw_data = u.read()
+    im=Image.open(BytesIO(raw_data))
+    global image2
+    image2=ImageTk.PhotoImage(im, master=frameActor)
+
+    imgL = Label(frameActor,height=150,width=150, bg='white')
+    imgL.pack()
+    imgL.place(x=550,y=100)
+    imgL.config(image=image2)
+
+    # 배우 웹문서
+
 
     pass
 
